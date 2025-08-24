@@ -1,16 +1,21 @@
-import { useContext, useState } from "react"
-import { AuthContext } from "./context/AuthContentProvider"
-import Counter from "./components/Counter";
-
-
-
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import Dashboard from "./pages/Dashboard"
+import ProtectedRoute from "./components/ProtectedRoute"
+import Login from "./pages/Login"
+import { ToastContainer } from "react-toastify"
+import ReverceProtectedRoutes from "./components/ReverceProtectedRoutes"
 
 const App = () => {
-    let store = useContext(AuthContext)
-    console.log(store);
     return (
-        <div> <Counter/></div>
-
+        <div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<ProtectedRoute Comp={Dashboard}/>}/>
+                    <Route path="/login" element={<ReverceProtectedRoutes Comp={Login}/>}/>
+                </Routes>
+                <ToastContainer />
+            </BrowserRouter>
+        </div>
     )
 }
 
