@@ -1,5 +1,5 @@
 // src/pages/SystemsPage.jsx
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { db } from '../config/firebase';
 import {
     collection,
@@ -9,28 +9,48 @@ import {
     deleteDoc,
     doc,
 } from 'firebase/firestore';
+import Header from '../components/Header';
 import { toast } from 'react-toastify';
 
 const System = () => {
     const [systems, setSystems] = useState([]);
     const [labs, setLabs] = useState([]);
+    const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentSystem, setCurrentSystem] = useState(null);
+    const [formInput, setFormInput] = useState({
+        pcId: "",
+        lab: "",
+        cpu: "",
+        ram: "",
+        storage: "",
+        status: "Available",
+        occupiedBy: "",
+        duration: "", // New state field for duration
+    });
 
     const systemsCollectionRef = collection(db, 'pcs');
     const labsCollectionRef = collection(db, 'labs');
+    const studentsCollectionRef = collection(db, 'students');
+
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const systemsData = await getDocs(systemsCollectionRef);
+                const [systemsData, labsData, studentsData] = await Promise.all([
+                    getDocs(systemsCollectionRef),
+                    getDocs(labsCollectionRef),
+                    getDocs(studentsCollectionRef)
+                ]);
+                
                 const fetchedSystems = systemsData.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-                setSystems(fetchedSystems);
-
-                const labsData = await getDocs(labsCollectionRef);
                 const fetchedLabs = labsData.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                const fetchedStudents = studentsData.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+                setSystems(fetchedSystems);
                 setLabs(fetchedLabs);
+                setStudents(fetchedStudents);
             } catch (error) {
                 console.error("Error fetching data: ", error);
                 toast.error("Failed to fetch data.");
@@ -43,25 +63,64 @@ const System = () => {
 
     const openModal = (system = null) => {
         setCurrentSystem(system);
+        if (system) {
+            setFormInput({
+                pcId: system.pcId,
+                lab: system.lab,
+                cpu: system.cpu,
+                ram: system.ram,
+                storage: system.storage,
+                status: system.status,
+                occupiedBy: system.occupiedBy || "",
+                duration: system.duration || "", // Set existing duration
+            });
+        } else {
+            setFormInput({
+                pcId: "",
+                lab: "",
+                cpu: "",
+                ram: "",
+                storage: "",
+                status: "Available",
+                occupiedBy: "",
+                duration: "",
+            });
+        }
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setCurrentSystem(null);
+        setFormInput({
+            pcId: "",
+            lab: "",
+            cpu: "",
+            ram: "",
+            storage: "",
+            status: "Available",
+            occupiedBy: "",
+            duration: "",
+        });
+    };
+
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormInput(prevInput => ({
+            ...prevInput,
+            [id]: value
+        }));
     };
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const systemData = {
-            pcId: formData.get('pcId'),
-            lab: formData.get('lab'),
-            cpu: formData.get('cpu'),
-            ram: formData.get('ram'),
-            storage: formData.get('storage'),
-            status: formData.get('status'),
-        };
+        const systemData = { ...formInput };
+        
+        // Clear occupied data if status is not Occupied
+        if (systemData.status !== 'Occupied') {
+            systemData.occupiedBy = "";
+            systemData.duration = "";
+        }
 
         try {
             if (currentSystem) {
@@ -125,9 +184,9 @@ const System = () => {
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">PC ID</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Lab</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">CPU</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">RAM</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Occupied By</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Duration</th>
                                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
@@ -136,13 +195,13 @@ const System = () => {
                                     <tr key={system.id} className="hover:bg-gray-700 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap text-white">{system.pcId}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-gray-400">{system.lab}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-400">{system.cpu}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-400">{system.ram}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${system.status === 'Operational' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${system.status === 'Available' ? 'bg-green-100 text-green-800' : system.status === 'Occupied' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
                                                 {system.status}
                                             </span>
                                         </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-gray-400">{system.occupiedBy || 'N/A'}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-gray-400">{system.duration || 'N/A'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <button onClick={() => openModal(system)} className="text-blue-500 hover:text-blue-400 mr-4">Edit</button>
                                             <button onClick={() => handleDelete(system.id)} className="text-red-500 hover:text-red-400">Delete</button>
@@ -162,11 +221,11 @@ const System = () => {
                             <form onSubmit={handleFormSubmit} className="space-y-4">
                                 <div>
                                     <label htmlFor="pcId" className="block text-sm font-medium text-gray-400">PC ID</label>
-                                    <input type="text" id="pcId" name="pcId" defaultValue={currentSystem?.pcId || ''} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                                    <input type="text" id="pcId" name="pcId" value={formInput.pcId} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
                                 </div>
                                 <div>
                                     <label htmlFor="lab" className="block text-sm font-medium text-gray-400">Lab</label>
-                                    <select id="lab" name="lab" defaultValue={currentSystem?.lab || ''} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <select id="lab" name="lab" value={formInput.lab} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                         <option value="" disabled>Select a Lab</option>
                                         {labs.map(lab => (
                                             <option key={lab.id} value={lab.name}>{lab.name}</option>
@@ -174,25 +233,37 @@ const System = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor="cpu" className="block text-sm font-medium text-gray-400">CPU</label>
-                                    <input type="text" id="cpu" name="cpu" defaultValue={currentSystem?.cpu || ''} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-                                </div>
-                                <div>
-                                    <label htmlFor="ram" className="block text-sm font-medium text-gray-400">RAM</label>
-                                    <input type="text" id="ram" name="ram" defaultValue={currentSystem?.ram || ''} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-                                </div>
-                                <div>
-                                    <label htmlFor="storage" className="block text-sm font-medium text-gray-400">Storage</label>
-                                    <input type="text" id="storage" name="storage" defaultValue={currentSystem?.storage || ''} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-                                </div>
-                                <div>
                                     <label htmlFor="status" className="block text-sm font-medium text-gray-400">Status</label>
-                                    <select id="status" name="status" defaultValue={currentSystem?.status || 'Operational'} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                        <option>Operational</option>
+                                    <select id="status" name="status" value={formInput.status} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <option>Available</option>
+                                        <option>Occupied</option>
                                         <option>Under Maintenance</option>
                                     </select>
                                 </div>
-                                <div className="flex justify-end space-x-4">
+                                {formInput.status === 'Occupied' && (
+                                    <>
+                                        <div>
+                                            <label htmlFor="occupiedBy" className="block text-sm font-medium text-gray-400">Occupied By</label>
+                                            <select id="occupiedBy" name="occupiedBy" value={formInput.occupiedBy} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                                <option value="" disabled>Select a Student</option>
+                                                {students.map(student => (
+                                                    <option key={student.id} value={student.name}>{student.name} ({student.studentId})</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="duration" className="block text-sm font-medium text-gray-400">Duration</label>
+                                            <select id="duration" name="duration" value={formInput.duration} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                                <option value="" disabled>Select a Duration</option>
+                                                <option value="1:00pm to 2:00pm">1:00pm to 2:00pm</option>
+                                                <option value="2:00pm to 3:00pm">2:00pm to 3:00pm</option>
+                                                <option value="3:00pm to 4:00pm">3:00pm to 4:00pm</option>
+                                                <option value="4:00pm to 5:00pm">4:00pm to 5:00pm</option>
+                                            </select>
+                                        </div>
+                                    </>
+                                )}
+                                <div className="flex justify-end space-x-4 mt-6">
                                     <button type="button" onClick={closeModal} className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md">
                                         Cancel
                                     </button>

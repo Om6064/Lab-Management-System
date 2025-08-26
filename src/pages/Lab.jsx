@@ -1,6 +1,6 @@
 // src/pages/LabsPage.jsx
-import { useState, useEffect } from 'react';
-import { db } from '../config/firebase'; // Assuming you've exported Firestore instance as 'db'
+import React, { useState, useEffect } from 'react';
+import { db } from '../config/firebase';
 import {
     collection,
     getDocs,
@@ -16,6 +16,11 @@ const Lab = () => {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentLab, setCurrentLab] = useState(null);
+    const [formInput, setFormInput] = useState({
+        name: "",
+        location: "",
+        capacity: "",
+    });
 
     const labsCollectionRef = collection(db, 'labs');
 
@@ -39,21 +44,43 @@ const Lab = () => {
 
     const openModal = (lab = null) => {
         setCurrentLab(lab);
+        if (lab) {
+            setFormInput({
+                name: lab.name,
+                location: lab.location,
+                capacity: lab.capacity,
+            });
+        } else {
+            setFormInput({
+                name: "",
+                location: "",
+                capacity: "",
+            });
+        }
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setCurrentLab(null);
+        setFormInput({ name: "", location: "", capacity: "" });
+    };
+
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormInput(prevInput => ({
+            ...prevInput,
+            [id]: value
+        }));
     };
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
+
         const labData = {
-            name: formData.get('name'),
-            location: formData.get('location'),
-            capacity: parseInt(formData.get('capacity'), 10),
+            name: formInput.name,
+            location: formInput.location,
+            capacity: parseInt(formInput.capacity, 10),
         };
 
         try {
@@ -109,7 +136,6 @@ const Lab = () => {
                     </button>
                 </div>
 
-                {/* Labs Table */}
                 <div className="bg-gray-800 p-6 rounded-lg shadow-xl overflow-x-auto">
                     {labs.length === 0 ? (
                         <p className="text-center text-gray-500 py-8">No labs found. Add a new one to get started.</p>
@@ -127,7 +153,7 @@ const Lab = () => {
                                 {labs.map(lab => (
                                     <tr key={lab.id} className="hover:bg-gray-700 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap text-white">{lab.name}</td>
-                                        <td className="px-6 py-4 whitespace-now-2rap text-gray-400">{lab.location}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-gray-400">{lab.location}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-gray-400">{lab.capacity}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <button onClick={() => openModal(lab)} className="text-blue-500 hover:text-blue-400 mr-4">Edit</button>
@@ -148,15 +174,15 @@ const Lab = () => {
                             <form onSubmit={handleFormSubmit} className="space-y-4">
                                 <div>
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-400">Lab Name</label>
-                                    <input type="text" id="name" name="name" defaultValue={currentLab?.name || ''} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                                    <input type="text" id="name" name="name" value={formInput.name} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
                                 </div>
                                 <div>
                                     <label htmlFor="location" className="block text-sm font-medium text-gray-400">Location</label>
-                                    <input type="text" id="location" name="location" defaultValue={currentLab?.location || ''} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                                    <input type="text" id="location" name="location" value={formInput.location} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
                                 </div>
                                 <div>
                                     <label htmlFor="capacity" className="block text-sm font-medium text-gray-400">Capacity</label>
-                                    <input type="number" id="capacity" name="capacity" defaultValue={currentLab?.capacity || ''} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+                                    <input type="number" id="capacity" name="capacity" value={formInput.capacity} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
                                 </div>
                                 <div className="flex justify-end space-x-4">
                                     <button type="button" onClick={closeModal} className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md">
