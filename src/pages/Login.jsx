@@ -1,87 +1,146 @@
-import { useState } from "react"
+import { useState } from "react";
 import { app } from "../config/firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Login = () => {
     const auth = getAuth(app);
     const [input, setInput] = useState({
-        email: "", password: ""
-    })
+        email: "",
+        password: "",
+    });
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        setInput({ ...input, [e.target.id]: e.target.value })
-    }
-    console.log(input);
+        setInput({ ...input, [e.target.id]: e.target.value });
+    };
 
-    const handleSubmit = async(e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
 
         try {
-            await signInWithEmailAndPassword(auth,input.email,input.password)
-            navigate("/")
+            await signInWithEmailAndPassword(auth, input.email, input.password);
+            navigate("/");
+            toast.success("Login successful!");
         } catch (error) {
-            if (error.code == "auth/too-many-requests") {
-                toast.error("too-many-requests")
+            let errorMessage = "An unknown error occurred.";
+            if (error.code === "auth/too-many-requests") {
+                errorMessage = "Too many failed login attempts. Please try again later.";
+            } else if (error.code === "auth/invalid-credential" || error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+                errorMessage = "Invalid email or password.";
+            } else {
+                errorMessage = error.message;
             }
-            if (error.code == "auth/invalid-credential") {
-                toast.error("invalid-credential")
-            }
-        }        
-    }
-    
-    return (
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        <div className="">
-            <section className="bg-gray-50 dark:bg-gray-900 h-[93vh] flex items-center justify-center">
-                <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
-                    <div className="flex flex-col justify-center">
-                        <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">We invest in the world’s potential</h1>
-                        <p className="mb-6 text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">Here at Flowbite we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth.</p>
-                        <a href="#" className="text-blue-600 dark:text-blue-500 hover:underline font-medium text-lg inline-flex items-center">Read more about our app
-                            <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M1 5h12m0 0L9 1m4 4L9 9" />
-                            </svg>
-                        </a>
+    return (
+        <div className="relative flex items-center justify-center min-h-screen bg-gray-900 overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 z-0 opacity-10">
+                {/* SVG for a cool tech pattern */}
+                <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+                    <defs>
+                        <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.1" />
+                        </pattern>
+                    </defs>
+                    <rect width="100" height="100" fill="url(#grid)" className="text-gray-700" />
+                </svg>
+            </div>
+
+            {/* Login Form Container */}
+            <div className="relative z-10 w-full max-w-md p-8 sm:p-12 bg-white/10 backdrop-blur-md rounded-xl shadow-2xl border border-gray-700">
+                <div className="flex flex-col items-center space-y-6">
+                    {/* Glowing Logo */}
+                    <div className="p-4 rounded-full bg-blue-500/10 backdrop-blur-sm shadow-blue-500/20">
+                        <svg
+                            className="w-20 h-20 text-blue-500 animate-pulse-slow"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1}
+                                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                            />
+                        </svg>
+                    </div>
+
+                    <h2 className="text-3xl font-bold text-white tracking-wide text-center">
+                        Welcome to TechLab Hub
+                    </h2>
+                    <p className="text-sm text-gray-400 text-center">
+                        Please sign in to manage your computer lab resources.
+                    </p>
+                </div>
+                
+                {/* Form */}
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="email" className="sr-only">Email address</label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            required
+                            className="w-full px-4 py-3 bg-transparent text-white border-b-2 border-gray-600 focus:border-blue-500 focus:outline-none transition-colors placeholder-gray-500"
+                            placeholder="Email address"
+                            onChange={handleChange}
+                            value={input.email}
+                        />
                     </div>
                     <div>
-                        <div className="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                Sign in to Flowbite
-                            </h2>
-                            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                                <div>
-                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                                    <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required onChange={handleChange} value={input.email} />
-                                </div>
-                                <div>
-                                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-                                    <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required onChange={handleChange} value={input.password} />
-                                </div>
-                                <div className="flex items-start">
-                                    <div className="flex items-center h-5">
-                                        <input id="remember" aria-describedby="remember" name="remember" type="checkbox" className="w-4 h-4 border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600" required />
-                                    </div>
-                                    <div className="ms-3 text-sm">
-                                        <label htmlFor="remember" className="font-medium text-gray-500 dark:text-gray-400">Remember this device</label>
-                                    </div>
-                                    <a href="#" className="ms-auto text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Lost Password?</a>
-                                </div>
-                                <button type="submit" className="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login to your account</button>
-                                <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                    Not registered yet? <a className="text-blue-600 hover:underline dark:text-blue-500">Create account</a>
-                                </div>
-                            </form>
-                        </div>
+                        <label htmlFor="password" className="sr-only">Password</label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autoComplete="current-password"
+                            required
+                            className="w-full px-4 py-3 bg-transparent text-white border-b-2 border-gray-600 focus:border-blue-500 focus:outline-none transition-colors placeholder-gray-500"
+                            placeholder="Password"
+                            onChange={handleChange}
+                            value={input.password}
+                        />
                     </div>
-                </div>
-            </section>
+
+                    <div className="flex justify-end text-sm">
+                        <Link to="/forgot-password" className="font-medium text-blue-400 hover:text-blue-300 transition-colors">
+                            Forgot Password?
+                        </Link>
+                    </div>
+
+                    <div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                        >
+                            {loading ? (
+                                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            ) : (
+                                'Sign in'
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
+    );
+};
 
-
-    )
-}
-
-export default Login
+export default Login;

@@ -1,21 +1,22 @@
-import { useContext, useEffect } from "react"
-import { AuthContext } from "../context/AuthContentProvider"
-import { useNavigate } from "react-router-dom"
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../context/AuthContentProvider";
+import { useNavigate } from "react-router-dom";
 
-const ReverceProtectedRoutes = ({Comp}) => {
-    const { user } = useContext(AuthContext)
-    const navigate = useNavigate()
+const ReverseProtectedRoutes = ({ Comp }) => {
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (user !== null) {
-            navigate("/")
-            return
+        if (user) {
+            navigate("/");
         }
-    }, [])
+    }, [user, navigate]);
 
-    return (
-        <Comp />
-    )
-}
+    if (user) {
+        return null;
+    }
 
-export default ReverceProtectedRoutes
+    return <Comp />;
+};
+
+export default ReverseProtectedRoutes;
