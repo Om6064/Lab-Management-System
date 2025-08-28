@@ -1,16 +1,16 @@
-// src/pages/ProfilePage.jsx
+
 import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContentProvider';
-// Assuming your Header component is here
+
 
 const ProfilePage = () => {
     const { user } = useContext(AuthContext);
 
-    // Placeholder data for demonstration
+    
     const userData = {
         name: user?.displayName || "Lab User",
         email: user?.email || "user@techlab.edu",
-        role: "Technician", // This would typically come from your user data or a backend
+        role: "Technician", 
         lastLogin: "2024-08-26 10:30 AM",
     };
 
@@ -26,7 +26,6 @@ const ProfilePage = () => {
                 <h1 className="text-4xl font-bold mb-8 text-center text-blue-400">Your Profile</h1>
                 
                 <div className="flex flex-col md:flex-row justify-center items-start md:space-x-8 space-y-8 md:space-y-0">
-                    {/* Profile Card */}
                     <div className="bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-sm">
                         <div className="flex flex-col items-center">
                             <div className="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center font-bold text-3xl text-white border-4 border-gray-700">
@@ -50,7 +49,7 @@ const ProfilePage = () => {
                         </div>
                     </div>
 
-                    {/* Recent Activity Card */}
+                    
                     <div className="bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-2xl">
                         <h2 className="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">Recent Activity</h2>
                         <ul className="space-y-4">

@@ -42,9 +42,7 @@ const Login = () => {
 
     return (
         <div className="relative flex items-center justify-center min-h-screen bg-gray-900 overflow-hidden">
-            {/* Background Pattern */}
             <div className="absolute inset-0 z-0 opacity-10">
-                {/* SVG for a cool tech pattern */}
                 <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
                     <defs>
                         <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
@@ -55,10 +53,8 @@ const Login = () => {
                 </svg>
             </div>
 
-            {/* Login Form Container */}
             <div className="relative z-10 w-full max-w-md p-8 sm:p-12 bg-white/10 backdrop-blur-md rounded-xl shadow-2xl border border-gray-700">
                 <div className="flex flex-col items-center space-y-6">
-                    {/* Glowing Logo */}
                     <div className="p-4 rounded-full bg-blue-500/10 backdrop-blur-sm shadow-blue-500/20">
                         <svg
                             className="w-20 h-20 text-blue-500 animate-pulse-slow"
@@ -84,7 +80,6 @@ const Login = () => {
                     </p>
                 </div>
                 
-                {/* Form */}
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="email" className="sr-only">Email address</label>

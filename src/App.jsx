@@ -10,20 +10,25 @@ import SettingsPage from "./pages/SettingsPage"
 import System from "./pages/System"
 import Lab from "./pages/Lab"
 import Student from "./pages/Student"
+import AddLabs from "./pages/AddLabs"
+import Error from "./pages/Error"
 
 const App = () => {
     return (
         <div>
             <BrowserRouter>
-            <Header/>
+                <Header />
                 <Routes>
-                    <Route path="/" element={<ProtectedRoute Comp={Dashboard}/>}/>
-                    <Route path="/login" element={<ReverceProtectedRoutes Comp={Login}/>}/>
-                    <Route path="/profile" element={<ProtectedRoute Comp={ProfilePage}/>}/>
-                    <Route path="/settings" element={<SettingsPage />}/>
-                    <Route path="/systems" element={<ProtectedRoute Comp={System}/>}/>
-                    <Route path="/lab" element={<ProtectedRoute Comp={Lab}/>}/>
-                    <Route path="/student" element={<ProtectedRoute Comp={Student}/>}/>
+                    <Route path="/" element={<ProtectedRoute Comp={Dashboard} />} />
+                    <Route path="/login" element={<ReverceProtectedRoutes Comp={Login} />} />
+                    <Route path="/profile" element={<ProtectedRoute Comp={ProfilePage} />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/systems" element={<ProtectedRoute Comp={System} />} />
+                    <Route path="/lab" element={<ProtectedRoute Comp={Lab} />} />
+                    <Route path="/student" element={<ProtectedRoute Comp={Student} />} />
+                    <Route path="/addlabs" element={<ProtectedRoute Comp={AddLabs} />} />
+                    <Route path="*" element={<Error />} />
+
                 </Routes>
                 <ToastContainer />
             </BrowserRouter>

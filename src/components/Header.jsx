@@ -70,10 +70,12 @@ const Header = () => {
           </div>
 
           {/* User Profile and Logout */}
-          <div className="flex items-center space-x-4">
+          {/* User Profile and Logout */}
+          {/* <div className="flex items-center">
             {user && (
-              <div className="relative group">
-                <button className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-shadow">
+              <div className="relative">
+          
+                <button className="group flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full transition-shadow">
                   <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-sm">
                     {user.email ? user.email[0].toUpperCase() : "U"}
                   </div>
@@ -81,7 +83,12 @@ const Header = () => {
                     {user.email || "User"}
                   </span>
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1 transform scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200 ease-out z-50">
+
+            
+                <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1 
+          transform scale-95 opacity-0 
+          group-hover:scale-100 group-hover:opacity-100 
+          transition-all duration-200 ease-out z-50">
                   <div className="px-4 py-2 text-sm text-gray-400 border-b border-gray-700">
                     Signed in as: <span className="font-bold block text-white">{user.email}</span>
                   </div>
@@ -92,19 +99,22 @@ const Header = () => {
                     Settings
                   </Link>
                   <div className="border-t border-gray-700 my-1"></div>
-                  <button onClick={localHandleLogout} className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">
+                  <button
+                    onClick={localHandleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">
                     Logout
                   </button>
                 </div>
               </div>
             )}
+
             <button onClick={toggleMobileMenu} type="button" className="md:hidden inline-flex items-center p-2 text-sm text-gray-400 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600" aria-expanded={isMobileMenuOpen ? "true" : "false"}>
               <span className="sr-only">Open main menu</span>
               <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M1 1h15M1 7h15M1 13h15" />
               </svg>
             </button>
-          </div>
+          </div> */}
         </div>
         <div className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"}`}>
           <ul className="flex flex-col mt-4 space-y-2 font-medium">
