@@ -82,11 +82,10 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* User Profile */}
+      
           <UserDropdown user={user} localHandleLogout={localHandleLogout} />
 
-
-          {/* Mobile Menu Button */}
+      
           <button
             onClick={toggleMobileMenu}
             type="button"
@@ -110,7 +109,7 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+       
         <div className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"}`}>
           <ul className="flex flex-col mt-3 space-y-2 font-medium">
             <li>
@@ -150,7 +149,6 @@ const Header = () => {
               </Link>
             </li>
 
-            {/* Mobile User Actions */}
             {user && (
               <>
                 <li className="border-t border-gray-700 pt-2">

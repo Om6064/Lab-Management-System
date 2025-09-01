@@ -1,116 +1,130 @@
-// src/pages/SettingsPage.jsx
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import { getAuth, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
+import { app } from "../config/firebase";
+import { toast } from "react-toastify";
 
 const SettingsPage = () => {
-    const [activeTab, setActiveTab] = useState('security');
-    const [accountForm, setAccountForm] = useState({ name: '', email: '' });
-    const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '' });
+  const auth = getAuth(app);
+  const [activeTab, setActiveTab] = useState("security");
+  const [passwordForm, setPasswordForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
-    const handleAccountChange = (e) => {
-        setAccountForm({ ...accountForm, [e.target.id]: e.target.value });
-    };
+  const handlePasswordChange = (e) => {
+    setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
+  };
 
-    const handlePasswordChange = (e) => {
-        setPasswordForm({ ...passwordForm, [e.target.id]: e.target.value });
-    };
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
 
-    const handleAccountSubmit = (e) => {
-        e.preventDefault();
-        // Here you would add your logic to update the user's account info
-        toast.success("Account information updated!");
-    };
+    if (!user) {
+      toast.error("No user is logged in!");
+      return;
+    }
 
-    const handlePasswordSubmit = (e) => {
-        e.preventDefault();
-        // Here you would add your logic to change the user's password
-        toast.success("Password changed successfully!");
-    };
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error("New password and confirm password do not match!");
+      return;
+    }
 
-    const renderContent = () => {
-        switch (activeTab) {
-            case 'account':
-                return (
-                    <form onSubmit={handleAccountSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
-                            <input type="text" id="name" value={accountForm.name} onChange={handleAccountChange} placeholder="Enter your full name" className="w-full px-4 py-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-blue-500 focus:outline-none transition-colors" />
-                        </div>
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
-                            <input type="email" id="email" value={accountForm.email} onChange={handleAccountChange} placeholder="Enter your email" className="w-full px-4 py-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-blue-500 focus:outline-none transition-colors" />
-                        </div>
-                        <button type="submit" className="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">Save Changes</button>
-                    </form>
-                );
-            case 'security':
-                return (
-                    <form onSubmit={handlePasswordSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="oldPassword" className="block text-sm font-medium text-gray-400 mb-2">Current Password</label>
-                            <input type="password" id="oldPassword" value={passwordForm.oldPassword} onChange={handlePasswordChange} placeholder="••••••••" className="w-full px-4 py-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-blue-500 focus:outline-none transition-colors" />
-                        </div>
-                        <div>
-                            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-400 mb-2">New Password</label>
-                            <input type="password" id="newPassword" value={passwordForm.newPassword} onChange={handlePasswordChange} placeholder="••••••••" className="w-full px-4 py-3 bg-gray-700 text-white rounded-md border border-gray-600 focus:border-blue-500 focus:outline-none transition-colors" />
-                        </div>
-                        <button type="submit" className="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">Change Password</button>
-                    </form>
-                );
-            case 'notifications':
-                return (
-                    <div className="space-y-6">
-                        <p className="text-gray-300">Manage your notification settings here.</p>
-                        {/* Example of a toggle switch for notifications */}
-                        <div className="flex items-center justify-between p-4 bg-gray-700 rounded-md">
-                            <span className="text-white">Receive email notifications</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" value="" className="sr-only peer" defaultChecked />
-                                <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                            </label>
-                        </div>
-                    </div>
-                );
-            default:
-                return null;
-        }
-    };
+    try {
+      // Re-authenticate with old password
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        passwordForm.oldPassword
+      );
+      await reauthenticateWithCredential(user, credential);
 
-    return (
-        <div className="bg-gray-900 min-h-screen text-white">
-            <div className="container mx-auto px-4 py-8">
-                <h1 className="text-4xl font-bold mb-8 text-center text-blue-400">Settings</h1>
-                
-                <div className="flex flex-col md:flex-row md:space-x-8">
-                    {/* Settings Tabs */}
-                    <div className="flex-shrink-0 mb-6 md:mb-0 md:w-1/4">
-                        <ul className="flex flex-col space-y-2 bg-gray-800 p-4 rounded-lg">
-                            <li>
-                                <button onClick={() => setActiveTab('account')} className={`w-full text-left px-4 py-2 rounded-md font-medium transition-colors ${activeTab === 'account' ? 'bg-blue-600 text-white' : 'hover:bg-gray-700 text-gray-300'}`}>
-                                    Account
-                                </button>
-                            <li>
-                                <button onClick={() => setActiveTab('security')} className={`w-full text-left px-4 py-2 rounded-md font-medium transition-colors ${activeTab === 'security' ? 'bg-blue-600 text-white' : 'hover:bg-gray-700 text-gray-300'}`}>
-                                    Security
-                                </button>
-                            </li>
-                            </li>
-                            <li>
-                                <button onClick={() => setActiveTab('notifications')} className={`w-full text-left px-4 py-2 rounded-md font-medium transition-colors ${activeTab === 'notifications' ? 'bg-blue-600 text-white' : 'hover:bg-gray-700 text-gray-300'}`}>
-                                    Notifications
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+      // Update password
+      await updatePassword(user, passwordForm.newPassword);
+      toast.success("Password updated successfully!");
 
-                    {/* Settings Content */}
-                    <div className="flex-grow bg-gray-800 p-8 rounded-lg shadow-xl">
-                        {renderContent()}
-                    </div>
-                </div>
-            </div>
+      // Reset form
+      setPasswordForm({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+      <div className="bg-gray-800 w-full max-w-3xl rounded-xl shadow-lg p-6 md:p-10">
+        {/* Tabs */}
+        <div className="flex border-b border-gray-700 mb-6">
+          {["profile", "security"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 text-sm md:text-base font-medium capitalize ${
+                activeTab === tab
+                  ? "text-blue-400 border-b-2 border-blue-400"
+                  : "text-gray-400 hover:text-gray-200"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
-    );
+
+        {/* Content */}
+        {activeTab === "profile" && (
+          <div>
+            <h2 className="text-xl font-bold text-white mb-4">Profile Settings</h2>
+            <p className="text-gray-400 text-sm">Update your profile info here.</p>
+          </div>
+        )}
+
+        {activeTab === "security" && (
+          <div>
+            <h2 className="text-xl font-bold text-white mb-4">Security Settings</h2>
+
+            {/* Change Password Form */}
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <input
+                type="password"
+                name="oldPassword"
+                value={passwordForm.oldPassword}
+                onChange={handlePasswordChange}
+                placeholder="Current Password"
+                required
+                className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500"
+              />
+
+              <input
+                type="password"
+                name="newPassword"
+                value={passwordForm.newPassword}
+                onChange={handlePasswordChange}
+                placeholder="New Password"
+                required
+                className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500"
+              />
+
+              <input
+                type="password"
+                name="confirmPassword"
+                value={passwordForm.confirmPassword}
+                onChange={handlePasswordChange}
+                placeholder="Confirm New Password"
+                required
+                className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-blue-500"
+              />
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors"
+              >
+                Update Password
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default SettingsPage;
