@@ -12,6 +12,7 @@ import Lab from "./pages/Lab"
 import Student from "./pages/Student"
 import AddLabs from "./pages/AddLabs"
 import Error from "./pages/Error"
+import ForgotPassword from "./components/ForgotPassword"
 
 const App = () => {
     return (
@@ -27,6 +28,7 @@ const App = () => {
                     <Route path="/lab" element={<ProtectedRoute Comp={Lab} />} />
                     <Route path="/student" element={<ProtectedRoute Comp={Student} />} />
                     <Route path="/addlabs" element={<ProtectedRoute Comp={AddLabs} />} />
+                    <Route path="/forgot-password" element={<ReverceProtectedRoutes Comp={ForgotPassword} />} />
                     <Route path="*" element={<Error />} />
 
                 </Routes>

@@ -3,7 +3,7 @@ import { LabContent } from "../context/LabContentProvider"
 import { Link } from "react-router-dom";
 
 const Lab = () => {
-    const { labfetchedData,fetchData } = useContext(LabContent);
+    const { labfetchedData,fetchData,deleteLab } = useContext(LabContent);
     console.log(labfetchedData);
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const Lab = () => {
                                 Location
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                <span className="sr-only">Edit</span>
+                                Action
                             </th>
                         </tr>
                     </thead>
@@ -56,8 +56,9 @@ const Lab = () => {
                                     <td className="px-6 py-4">
                                         {lab.location}
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                    <td className="px-6 py-4 flex gap-3">
+                                        <a href="#" className="font-medium text-blue-600 hover:underline">Edit</a>
+                                        <button className="font-medium text-red-600 hover:underline" onClick={() => deleteLab(lab.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))
