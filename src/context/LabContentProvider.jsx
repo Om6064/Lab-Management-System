@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { createContext, useState } from "react";
 import { db } from "../config/firebase";
 import { toast } from "react-toastify";
@@ -6,32 +6,34 @@ import { toast } from "react-toastify";
 export const LabContent = createContext();
 
 const LabContentProvider = ({ children }) => {
-  const labCollactionRef = collection(db, "labs");
+  const labCollectionRef = collection(db, "labs");
   const [labs, setLabs] = useState([]);
   const [labfetchedData, setLabFetchedData] = useState([]);
 
   const addLabs = async (labs) => {
     try {
-      await addDoc(labCollactionRef, {
+      await addDoc(labCollectionRef, {
         ...labs,
         createdAt: new Date(),
       });
       toast.success("Lab Added Successfully");
+      fetchData();
     } catch (error) {
       toast.error("Something Went Wrong");
     }
   };
 
   const fetchData = async () => {
-    const labsSnapshootes = await getDocs(labCollactionRef);
-
-    const arr = labsSnapshootes.docs.map((lab) => {
-      return {
+    try {
+      const labsSnapshots = await getDocs(labCollectionRef);
+      const arr = labsSnapshots.docs.map((lab) => ({
         ...lab.data(),
         id: lab.id,
-      };
-    });
-    setLabFetchedData(arr);
+      }));
+      setLabFetchedData(arr);
+    } catch (error) {
+      toast.error("Failed to fetch labs");
+    }
   };
 
   const deleteLab = async (id) => {
@@ -45,7 +47,7 @@ const LabContentProvider = ({ children }) => {
                 try {
                   await deleteDoc(doc(db, "labs", id));
                   toast.success("Lab Deleted Successfully");
-                  fetchData(); 
+                  fetchData();
                   closeToast();
                 } catch (error) {
                   toast.error("Something Went Wrong");
@@ -68,12 +70,27 @@ const LabContentProvider = ({ children }) => {
     );
   };
 
+  const editLab = async (id, updatedData) => {
+    try {
+      const labRef = doc(db, "labs", id);
+      await updateDoc(labRef, {
+        ...updatedData,
+        updatedAt: new Date(),
+      });
+      toast.success("Lab Updated Successfully");
+      fetchData();
+    } catch (error) {
+      toast.error("Something Went Wrong While Updating");
+    }
+  };
+
   const value = {
     labs,
     addLabs,
     labfetchedData,
     fetchData,
     deleteLab,
+    editLab,
   };
 
   return <LabContent.Provider value={value}>{children}</LabContent.Provider>;

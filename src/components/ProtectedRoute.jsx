@@ -11,7 +11,7 @@ const ProtectedRoute = ({ Comp }) => {
             navigate("/login")
             return
         }
-    }, [])
+    }, [user, navigate])
 
     return (
         <Comp />
