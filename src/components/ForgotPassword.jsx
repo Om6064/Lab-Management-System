@@ -1,33 +1,23 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { app } from "../config/firebase";
-import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContentProvider";
 
 const ForgotPassword = () => {
   const auth = getAuth(app);
+  const { forgetPassword } = useContext(AuthContext)
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleReset = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      await sendPasswordResetEmail(auth, email);
-      toast.success("Password reset email sent! Please check your inbox.");
-      setEmail("");
-    } catch (error) {
-      let errorMessage = "Something went wrong.";
-      if (error.code === "auth/user-not-found") {
-        errorMessage = "No user found with this email.";
-      } else {
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+    await forgetPassword(email); 
+    setLoading(false);
+    setEmail(""); 
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900">

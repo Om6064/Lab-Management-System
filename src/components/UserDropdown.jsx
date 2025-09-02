@@ -5,7 +5,7 @@ const UserDropdown = ({ user, localHandleLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -20,7 +20,6 @@ const UserDropdown = ({ user, localHandleLogout }) => {
 
   return (
     <div className="relative block" ref={dropdownRef}>
-      {/* Avatar + Email */}
       <div
         onClick={() => setIsDropdownOpen((prev) => !prev)}
         className="flex items-center space-x-2 cursor-pointer"
@@ -33,7 +32,6 @@ const UserDropdown = ({ user, localHandleLogout }) => {
         </span>
       </div>
 
-      {/* Dropdown */}
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-44 sm:w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1 z-50">
           {user ? (

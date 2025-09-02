@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { getAuth, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
-import { app } from "../config/firebase";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContentProvider";
 import { toast } from "react-toastify";
 
 const SettingsPage = () => {
-  const auth = getAuth(app);
+  const { resetPassword } = useContext(AuthContext);
+
   const [activeTab, setActiveTab] = useState("security");
   const [passwordForm, setPasswordForm] = useState({
     oldPassword: "",
@@ -18,41 +18,20 @@ const SettingsPage = () => {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    const user = auth.currentUser;
-
-    if (!user) {
-      toast.error("No user is logged in!");
-      return;
-    }
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       toast.error("New password and confirm password do not match!");
       return;
     }
 
-    try {
-      // Re-authenticate with old password
-      const credential = EmailAuthProvider.credential(
-        user.email,
-        passwordForm.oldPassword
-      );
-      await reauthenticateWithCredential(user, credential);
+    await resetPassword(passwordForm.oldPassword, passwordForm.newPassword);
 
-      // Update password
-      await updatePassword(user, passwordForm.newPassword);
-      toast.success("Password updated successfully!");
-
-      // Reset form
-      setPasswordForm({ oldPassword: "", newPassword: "", confirmPassword: "" });
-    } catch (error) {
-      toast.error(error.message);
-    }
+    setPasswordForm({ oldPassword: "", newPassword: "", confirmPassword: "" });
   };
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
       <div className="bg-gray-800 w-full max-w-3xl rounded-xl shadow-lg p-6 md:p-10">
-        {/* Tabs */}
         <div className="flex border-b border-gray-700 mb-6">
           {["profile", "security"].map((tab) => (
             <button
@@ -69,19 +48,12 @@ const SettingsPage = () => {
           ))}
         </div>
 
-        {/* Content */}
-        {activeTab === "profile" && (
-          <div>
-            <h2 className="text-xl font-bold text-white mb-4">Profile Settings</h2>
-            <p className="text-gray-400 text-sm">Update your profile info here.</p>
-          </div>
-        )}
-
         {activeTab === "security" && (
           <div>
-            <h2 className="text-xl font-bold text-white mb-4">Security Settings</h2>
+            <h2 className="text-xl font-bold text-white mb-4">
+              Security Settings
+            </h2>
 
-            {/* Change Password Form */}
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
               <input
                 type="password"

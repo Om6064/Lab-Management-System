@@ -51,7 +51,7 @@ const AddLabs = () => {
             <form className="w-full max-w-lg p-8 bg-gray-800 rounded-xl shadow-2xl" onSubmit={handleSubmit}>
                 <h2 className="text-3xl font-bold text-center mb-6 text-white">Add New Lab</h2>
                 
-                {/* Lab Name Input */}
+            
                 <div className="mb-5">
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-200">Lab Name</label>
                     <input 
@@ -65,7 +65,7 @@ const AddLabs = () => {
                     {error.name && <p className="mt-1 text-xs text-red-400">{error.name}</p>}
                 </div>
                 
-                {/* Capacity Input */}
+                
                 <div className="mb-5">
                     <label htmlFor="capacity" className="block mb-2 text-sm font-medium text-gray-200">Capacity</label>
                     <input 
@@ -79,7 +79,7 @@ const AddLabs = () => {
                     {error.capacity && <p className="mt-1 text-xs text-red-400">{error.capacity}</p>}
                 </div>
                 
-                {/* Location Input */}
+                
                 <div className="mb-6">
                     <label htmlFor="location" className="block mb-2 text-sm font-medium text-gray-200">Location</label>
                     <input 

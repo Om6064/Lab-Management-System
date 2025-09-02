@@ -1,16 +1,15 @@
-import { useState } from "react";
-import { app } from "../config/firebase";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContentProvider";
+
 
 const Login = () => {
-    const auth = getAuth(app);
+      const { login, loading } = useContext(AuthContext);
     const [input, setInput] = useState({
         email: "",
         password: "",
     });
-    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -18,27 +17,14 @@ const Login = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-
-        try {
-            await signInWithEmailAndPassword(auth, input.email, input.password);
-            navigate("/");
-            toast.success("Login successful!");
-        } catch (error) {
-            let errorMessage = "An unknown error occurred.";
-            if (error.code === "auth/too-many-requests") {
-                errorMessage = "Too many failed login attempts. Please try again later.";
-            } else if (error.code === "auth/invalid-credential" || error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
-                errorMessage = "Invalid email or password.";
-            } else {
-                errorMessage = error.message;
-            }
-            toast.error(errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    };
+    e.preventDefault();
+    try {
+      await login(input.email, input.password);
+      navigate("/");
+    } catch {
+        console.log("Hello")
+    }
+  };
 
     return (
         <div className="relative flex items-center justify-center min-h-screen bg-gray-900 overflow-hidden">

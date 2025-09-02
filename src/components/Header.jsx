@@ -1,25 +1,16 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContentProvider";
-import { getAuth, signOut } from "firebase/auth";
-import { app } from "../config/firebase";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import UserDropdown from "./UserDropdown";
 
 const Header = () => {
-  const auth = getAuth(app);
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const localHandleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate("/login");
-      toast.success("Logged out successfully!");
-    } catch (error) {
-      toast.error("Something went wrong during logout.");
-    }
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
   };
 
   const toggleMobileMenu = () => {
@@ -30,9 +21,8 @@ const Header = () => {
     <header className="bg-gray-900 text-white shadow-md">
       <nav className="max-w-screen-2xl mx-auto px-3 sm:px-4 py-3 md:py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <a
-            href="/"
+          <Link
+            to={"/"}
             className="flex items-center space-x-2 transition-transform hover:scale-105"
           >
             <svg
@@ -52,40 +42,28 @@ const Header = () => {
             <span className="text-xl sm:text-2xl font-extrabold tracking-wide">
               TechLab Hub
             </span>
-          </a>
+          </Link>
 
-          {/* Desktop Navigation */}
+        
           <div className="hidden md:flex flex-grow justify-center space-x-8 lg:space-x-12">
-            <Link
-              to="/"
-              className="text-gray-300 hover:text-blue-500 font-semibold transition-colors text-base lg:text-lg"
-            >
+            <Link to="/" className="text-gray-300 hover:text-blue-500 font-semibold">
               Dashboard
             </Link>
-            <Link
-              to="/systems"
-              className="text-gray-300 hover:text-blue-500 font-semibold transition-colors text-base lg:text-lg"
-            >
+            <Link to="/systems" className="text-gray-300 hover:text-blue-500 font-semibold">
               Systems
             </Link>
-            <Link
-              to="/lab"
-              className="text-gray-300 hover:text-blue-500 font-semibold transition-colors text-base lg:text-lg"
-            >
+            <Link to="/lab" className="text-gray-300 hover:text-blue-500 font-semibold">
               Lab
             </Link>
-            <Link
-              to="/student"
-              className="text-gray-300 hover:text-blue-500 font-semibold transition-colors text-base lg:text-lg"
-            >
+            <Link to="/student" className="text-gray-300 hover:text-blue-500 font-semibold">
               Student
             </Link>
           </div>
 
       
-          <UserDropdown user={user} localHandleLogout={localHandleLogout} />
+          <UserDropdown user={user} localHandleLogout={handleLogout} />
 
-      
+
           <button
             onClick={toggleMobileMenu}
             type="button"
@@ -109,42 +87,25 @@ const Header = () => {
           </button>
         </div>
 
-       
         <div className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"}`}>
           <ul className="flex flex-col mt-3 space-y-2 font-medium">
             <li>
-              <Link
-                to="/"
-                className="block py-2 px-3 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
-                onClick={toggleMobileMenu}
-              >
+              <Link to="/" onClick={toggleMobileMenu} className="block py-2 px-3 text-white hover:bg-gray-700">
                 Dashboard
               </Link>
             </li>
             <li>
-              <Link
-                to="/systems"
-                className="block py-2 px-3 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
-                onClick={toggleMobileMenu}
-              >
+              <Link to="/systems" onClick={toggleMobileMenu} className="block py-2 px-3 text-white hover:bg-gray-700">
                 Systems
               </Link>
             </li>
             <li>
-              <Link
-                to="/lab"
-                className="block py-2 px-3 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
-                onClick={toggleMobileMenu}
-              >
+              <Link to="/lab" onClick={toggleMobileMenu} className="block py-2 px-3 text-white hover:bg-gray-700">
                 Lab
               </Link>
             </li>
             <li>
-              <Link
-                to="/student"
-                className="block py-2 px-3 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
-                onClick={toggleMobileMenu}
-              >
+              <Link to="/student" onClick={toggleMobileMenu} className="block py-2 px-3 text-white hover:bg-gray-700">
                 Student
               </Link>
             </li>
@@ -162,7 +123,7 @@ const Header = () => {
                 <li>
                   <button
                     onClick={() => {
-                      localHandleLogout();
+                      handleLogout();
                       toggleMobileMenu();
                     }}
                     className="block w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-700"
