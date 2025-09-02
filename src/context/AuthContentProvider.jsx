@@ -27,7 +27,7 @@ export const AuthContentProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  // 🔹 Centralized Sign In
+
   const login = async (email, password) => {
     setLoading(true);
     try {
@@ -48,13 +48,13 @@ export const AuthContentProvider = ({ children }) => {
         errorMessage = error.message;
       }
       toast.error(errorMessage);
-      throw error; // rethrow for component handling if needed
+      throw error; 
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔹 Forgot password (email link)
+
   const forgetPassword = async (email) => {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -70,7 +70,7 @@ export const AuthContentProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Reset password (while logged in)
+  
   const resetPassword = async (oldPassword, newPassword) => {
     if (!auth.currentUser) {
       toast.error("No user is logged in!");
@@ -83,10 +83,10 @@ export const AuthContentProvider = ({ children }) => {
         oldPassword
       );
 
-      // re-authenticate first
+      
       await reauthenticateWithCredential(auth.currentUser, credential);
 
-      // update password
+      
       await updatePassword(auth.currentUser, newPassword);
 
       toast.success("Password updated successfully!");
@@ -95,7 +95,7 @@ export const AuthContentProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Sign out (logout)
+  
   const logout = async () => {
     try {
       await signOut(auth);
