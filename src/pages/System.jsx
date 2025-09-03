@@ -3,20 +3,20 @@ import { LabContent } from "../context/LabContentProvider"
 import { Link } from "react-router-dom";
 
 const System = () => {
-    const { labfetchedData,fetchData,deleteLab} = useContext(LabContent);
+    const { labfetchedData, fetchData, deleteLab } = useContext(LabContent);
     console.log(labfetchedData);
 
     useEffect(() => {
         fetchData()
-    },[])
-    
+    }, [])
+
 
     return (
         <div className="container mx-auto p-4">
             <div className="flex mt-8 md:mt-12 justify-between items-center mb-6">
                 <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-white">Labs</h2>
-                <Link 
-                    to={"/addlabs"} 
+                <Link
+                    to={"/addlabs"}
                     className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200"
                 >
                     + Add System
@@ -43,8 +43,8 @@ const System = () => {
                     <tbody>
                         {labfetchedData.length > 0 ? (
                             labfetchedData.map((lab, index) => (
-                              <tr 
-                                    key={index} 
+                                <tr
+                                    key={index}
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                 >
                                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -57,7 +57,7 @@ const System = () => {
                                         {lab.location}
                                     </td>
                                     <td className="px-6 py-4 flex gap-3">
-                                        <Link to={`/edit-lab/${lab.id}`} className="text-blue-500">Edit</Link>
+                                        <a href="#" className="font-medium text-blue-600 hover:underline">Edit</a>
                                         <button className="font-medium text-red-600 hover:underline" onClick={() => deleteLab(lab.id)}>Delete</button>
                                     </td>
                                 </tr>

@@ -16,7 +16,7 @@ const LabContentProvider = ({ children }) => {
         ...labs,
         createdAt: new Date(),
       });
-      toast.success("Lab Added Successfully");
+      // toast.success("Lab Added Successfully");
       fetchData();
     } catch (error) {
       toast.error("Something Went Wrong");

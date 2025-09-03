@@ -57,7 +57,7 @@ const Lab = () => {
                                         {lab.location}
                                     </td>
                                     <td className="px-6 py-4 flex gap-3">
-                                        <a href="#" className="font-medium text-blue-600 hover:underline">Edit</a>
+                                         <Link to={`/edit-lab/${lab.id}`} className="text-blue-500">Edit</Link>
                                         <button className="font-medium text-red-600 hover:underline" onClick={() => deleteLab(lab.id)}>Delete</button>
                                     </td>
                                 </tr>
