@@ -7,8 +7,8 @@ export const LabContent = createContext();
 
 const LabContentProvider = ({ children }) => {
   const labCollectionRef = collection(db, "labs");
-  const [labs, setLabs] = useState([]);
   const [labfetchedData, setLabFetchedData] = useState([]);
+  
 
   const addLabs = async (labs) => {
     try {
@@ -85,7 +85,6 @@ const LabContentProvider = ({ children }) => {
   };
 
   const value = {
-    labs,
     addLabs,
     labfetchedData,
     fetchData,

@@ -2,9 +2,10 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LabContent } from "../context/LabContentProvider";
+import { SystemContent } from "../context/SystemContentProvider";
 
 const AddSystem = () => {
-    const { addLabs } = useContext(LabContent);
+    const { addSystem } = useContext(SystemContent);
     const [input, setInput] = useState({
         name: "",
         capacity: "",

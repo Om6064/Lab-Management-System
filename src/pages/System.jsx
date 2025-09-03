@@ -1,9 +1,10 @@
 import { useContext, useEffect } from "react"
 import { LabContent } from "../context/LabContentProvider"
 import { Link } from "react-router-dom";
+import { SystemContent } from "../context/SystemContentProvider";
 
 const System = () => {
-    const { labfetchedData, fetchData, deleteLab } = useContext(LabContent);
+    const {addSystem} = useContext(SystemContent);
     console.log(labfetchedData);
 
     useEffect(() => {
