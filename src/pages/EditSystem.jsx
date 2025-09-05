@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { SystemContent } from "../context/SystemContentProvider";
 
-const AddSystem = () => {
+const EditSystem = () => {
     const { addSystem } = useContext(SystemContent);
     const [input, setInput] = useState({
         system_name: "",
@@ -93,4 +93,4 @@ const AddSystem = () => {
     );
 };
 
-export default AddSystem;
+export default EditSystem;

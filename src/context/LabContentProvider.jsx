@@ -66,7 +66,7 @@ const LabContentProvider = ({ children }) => {
           </div>
         </div>
       ),
-      { autoClose: 4000 }
+      { autoClose: false }
     );
   };
 
