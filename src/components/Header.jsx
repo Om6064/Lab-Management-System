@@ -44,23 +44,25 @@ const Header = () => {
             </span>
           </Link>
 
-        
-          <div className="hidden md:flex flex-grow justify-center space-x-8 lg:space-x-12">
-            <Link to="/" className="text-gray-300 hover:text-blue-500 font-semibold">
-              Dashboard
-            </Link>
-            <Link to="/systems" className="text-gray-300 hover:text-blue-500 font-semibold">
-              Systems
-            </Link>
-            <Link to="/lab" className="text-gray-300 hover:text-blue-500 font-semibold">
-              Lab
-            </Link>
-            <Link to="/student" className="text-gray-300 hover:text-blue-500 font-semibold">
-              Student
-            </Link>
-          </div>
+          {
+            user &&
+            <div className="hidden md:flex flex-grow justify-center space-x-8 lg:space-x-12">
+              <Link to="/" className="text-gray-300 hover:text-blue-500 font-semibold">
+                Dashboard
+              </Link>
+              <Link to="/systems" className="text-gray-300 hover:text-blue-500 font-semibold">
+                Systems
+              </Link>
+              <Link to="/lab" className="text-gray-300 hover:text-blue-500 font-semibold">
+                Lab
+              </Link>
+              <Link to="/student" className="text-gray-300 hover:text-blue-500 font-semibold">
+                Student
+              </Link>
+            </div>
+          }
 
-      
+
           <UserDropdown user={user} localHandleLogout={handleLogout} />
 
 

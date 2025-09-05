@@ -5,12 +5,15 @@ import App from './App.jsx'
 import AuthContentProvider from './context/AuthContentProvider.jsx'
 import LabContentProvider from './context/LabContentProvider.jsx'
 import SystemContentProvider from './context/SystemContentProvider.jsx'
+import StudentContentProvider from './context/StudentContentProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <AuthContentProvider>
     <LabContentProvider>
       <SystemContentProvider>
-        <App />
+        <StudentContentProvider>
+          <App />
+        </StudentContentProvider>
       </SystemContentProvider>
     </LabContentProvider>
   </AuthContentProvider>
