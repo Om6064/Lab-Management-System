@@ -1,10 +1,11 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { StudentContent } from "../context/StudentContentProvider";
+import { StudentContext } from "../context/StudentContentProvider";
+
 
 const AddStudent = () => {
-    const { addStudent } = useContext(StudentContent);
+    const { addStudent } = useContext(StudentContext);
     const [input, setInput] = useState({
         name: "",
         grid: "",
@@ -28,7 +29,7 @@ const AddStudent = () => {
             tempObj.course = "course is required.";
         }
         if (input.grid.trim() === "") {
-            tempObj.course = "grid is required.";
+            tempObj.grid = "grid is required.";
         }
         setError(tempObj);
 
@@ -40,7 +41,6 @@ const AddStudent = () => {
                 grid: "",
                 course: "",
             });
-            toast.success("Student added successfully!");
         } else {
             toast.error("Please fill out all required fields.");
         }
