@@ -1,18 +1,20 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContentProvider";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import UserDropdown from "./UserDropdown";
 
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     navigate("/login");
   };
-
+  console.log(pathname);
+  
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -47,16 +49,31 @@ const Header = () => {
           {
             user &&
             <div className="hidden md:flex flex-grow justify-center space-x-8 lg:space-x-12">
-              <Link to="/" className="text-gray-300 hover:text-blue-500 font-semibold">
+              <Link
+                to="/"
+                className={`font-semibold ${pathname === "/"
+                  ? "text-blue-500"
+                  : "text-gray-300 hover:text-blue-500"
+                  }`}
+              >
                 Dashboard
               </Link>
-              <Link to="/systems" className="text-gray-300 hover:text-blue-500 font-semibold">
+              <Link to="/systems" className={`font-semibold ${pathname === "/systems" || pathname === "/addsystems" || pathname.includes("/edit-system")
+                ? "text-blue-500"
+                : "text-gray-300 hover:text-blue-500"
+                }`}>
                 Systems
               </Link>
-              <Link to="/lab" className="text-gray-300 hover:text-blue-500 font-semibold">
+              <Link to="/lab" className={`font-semibold ${pathname === "/lab" || pathname === "/addlabs" || pathname.includes("/edit-lab")
+                ? "text-blue-500"
+                : "text-gray-300 hover:text-blue-500"
+                }`}>
                 Lab
               </Link>
-              <Link to="/student" className="text-gray-300 hover:text-blue-500 font-semibold">
+              <Link to="/student" className={`font-semibold ${pathname === "/student" || pathname === "/addstudent" || pathname.includes("/edit-student")
+                ? "text-blue-500"
+                : "text-gray-300 hover:text-blue-500"
+                }`}>
                 Student
               </Link>
             </div>
