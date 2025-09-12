@@ -44,7 +44,7 @@ const Student = () => {
                                         <td className="px-6 py-4">{stu.grid}</td>
                                         <td className="px-6 py-4">{stu.course}</td>
                                         <td className="px-6 py-4 flex gap-3">
-                                            <Link to={`/edit-lab/${stu.id}`} className="text-blue-500">
+                                            <Link to={`/edit-student/${stu.id}`} className="text-blue-500">
                                                 Edit
                                             </Link>
                                             <button

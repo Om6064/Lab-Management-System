@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, getDocs, doc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, getDocs, doc, updateDoc } from "firebase/firestore";
 import { createContext, useState } from "react";
 import { toast } from "react-toastify";
 import { db } from "../config/firebase";
@@ -8,19 +8,19 @@ export const StudentContext = createContext();
 const StudentContextProvider = ({ children }) => {
   const [fetchedStudentData, setFetchedStudentData] = useState([]);
 
-  // Add student
+  
   const addStudent = async (data) => {
     try {
       await addDoc(collection(db, "students"), data);
       toast.success("Student added successfully!");
-      await fetchStudents(); // refresh list after add
+      await fetchStudents();
     } catch (error) {
       console.error("Error adding student:", error);
       toast.error("Something went wrong");
     }
   };
 
-  // Fetch all students
+
   const fetchStudents = async () => {
     try {
       const studentSnapShot = await getDocs(collection(db, "students"));
@@ -47,7 +47,7 @@ const StudentContextProvider = ({ children }) => {
                 try {
                   await deleteDoc(doc(db, "students", id));
                   toast.success("Student deleted successfully!");
-                  await fetchStudents(); // refresh list after delete
+                  await fetchStudents();
                   closeToast();
                 } catch (error) {
                   console.error("Error deleting student:", error);
@@ -71,11 +71,24 @@ const StudentContextProvider = ({ children }) => {
     );
   };
 
+  const editStudent = async(id,updatedStudent) => {
+    try {
+      const studentRef = doc(db, "students", id);
+      await updateDoc(studentRef,{
+        ...updatedStudent,
+        updatedAt : new Date()
+      })
+      toast.success("Student Updated Successfully")
+    } catch (error) {
+      toast.error("Something Went Wrong")
+    }
+  }
   const value = {
     addStudent,
     fetchStudents,
     fetchedStudentData,
     deleteStudent,
+    editStudent
   };
 
   return (

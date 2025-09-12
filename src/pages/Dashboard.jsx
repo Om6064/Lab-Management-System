@@ -21,7 +21,7 @@ const Dashboard = () => {
                 const totalLabs = labsSnapshot.size;
 
             
-                const pcsSnapshot = await getDocs(collection(db, 'pcs'));
+                const pcsSnapshot = await getDocs(collection(db, 'system'));
                 const totalPCs = pcsSnapshot.size;
                 const occupiedPCs = pcsSnapshot.docs.filter(doc => doc.data().status === 'Occupied').length; 
                

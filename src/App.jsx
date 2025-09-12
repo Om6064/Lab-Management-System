@@ -17,6 +17,7 @@ import Editlabs from "./pages/Editlabs"
 import AddSystem from "./pages/AddSystem"
 import EditSystem from "./pages/EditSystem"
 import AddStudent from "./pages/AddStudent"
+import EditStudents from "./pages/EditStudents"
 
 const App = () => {
     return (
@@ -37,6 +38,7 @@ const App = () => {
                     <Route path="/forgot-password" element={<ReverceProtectedRoutes Comp={ForgotPassword} />} />
                     <Route path="/edit-lab/:id" element={<ProtectedRoute Comp={Editlabs} />} />
                     <Route path="/edit-system/:id" element={<ProtectedRoute Comp={EditSystem} />} />
+                    <Route path="/edit-student/:id" element={<ProtectedRoute Comp={EditStudents} />} />
                     <Route path="*" element={<Error />} />
 
                 </Routes>
