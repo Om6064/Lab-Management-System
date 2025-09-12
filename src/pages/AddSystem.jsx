@@ -2,11 +2,14 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { SystemContent } from "../context/SystemContentProvider";
+import { LabContent } from "../context/LabContentProvider";
 
 const AddSystem = () => {
     const { addSystem } = useContext(SystemContent);
+    const { labfetchedData } = useContext(LabContent)
     const [input, setInput] = useState({
         system_name: "",
+        labid: "",
         status: "",
     });
     const [error, setError] = useState({});
@@ -23,6 +26,9 @@ const AddSystem = () => {
         if (input.system_name.trim() === "") {
             tempObj.system_name = "System Name is required.";
         }
+        if (input.labid.trim() === "") {
+            tempObj.labid = "Lab Id is required.";
+        }
         if (input.status.trim() === "") {
             tempObj.status = "Status is required.";
         }
@@ -32,11 +38,10 @@ const AddSystem = () => {
             addSystem(input);
             navigate("/systems");
             setInput({
-                name: "",
+                system_name: "",
+                labid: "",
                 status: "",
-                location: "",
             });
-            toast.success("System added successfully!");
         } else {
             toast.error("Please fill out all required fields.");
         }
@@ -59,6 +64,27 @@ const AddSystem = () => {
                         value={input.system_name}
                     />
                     {error.system_name && <p className="mt-1 text-xs text-red-400">{error.system_name}</p>}
+                </div>
+
+                <div className="mb-5">
+                    <label htmlFor="labid" className="block mb-2 text-sm font-medium text-gray-200">
+                        Select Labs
+                    </label>
+                    <select
+                        id="labid"
+                        className="shadow-sm bg-gray-700 border border-gray-600 text-white text-sm rounded-lg 
+               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-colors"
+                        onChange={handleChange}
+                        value={input.labid}
+                    >
+                        <option value="">-- Select Lab --</option>
+                        {
+                            labfetchedData && labfetchedData.map((lab) => {
+                                return <option value={lab.id}>{lab.name}</option>
+                            })
+                        }
+                    </select>
+                    {error.labid && <p className="mt-1 text-xs text-red-400">{error.labid}</p>}
                 </div>
 
 

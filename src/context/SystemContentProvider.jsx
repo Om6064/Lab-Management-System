@@ -1,5 +1,5 @@
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { db } from "../config/firebase";
 import { toast } from "react-toastify";
 
@@ -79,6 +79,10 @@ const SystemContentProvider = ({ children }) => {
       toast.error("Something Went Wrong");
     }
   };
+
+  useEffect(() => {
+    fetchSystems()
+  },[])
 
   const value = {
     addSystem,

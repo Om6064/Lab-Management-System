@@ -1,5 +1,5 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { db } from "../config/firebase";
 import { toast } from "react-toastify";
 
@@ -8,7 +8,7 @@ export const LabContent = createContext();
 const LabContentProvider = ({ children }) => {
   const labCollectionRef = collection(db, "labs");
   const [labfetchedData, setLabFetchedData] = useState([]);
-  
+
 
   const addLabs = async (labs) => {
     try {
@@ -83,6 +83,11 @@ const LabContentProvider = ({ children }) => {
       toast.error("Something Went Wrong While Updating");
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
 
   const value = {
     addLabs,
