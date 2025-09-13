@@ -47,14 +47,14 @@ const Dashboard = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+            <div className="flex items-center justify-center min-h-[92.5vh] bg-gray-900 text-white">
                 <p className="text-lg animate-pulse">Loading dashboard...</p>
             </div>
         );
     }
 
     return (
-        <div className="bg-gray-900 min-h-screen text-white">
+        <div className="bg-gray-900 min-h-[92.5vh] text-white">
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-4xl font-bold mb-8 text-blue-400">Dashboard Overview</h1>
 

@@ -20,7 +20,7 @@ const ProfilePage = () => {
     ];
 
     return (
-        <div className="bg-gray-900 min-h-screen text-white">
+        <div className="bg-gray-900 min-h-[92.5vh] text-white">
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-4xl font-bold mb-8 text-center text-blue-400">Your Profile</h1>
                 

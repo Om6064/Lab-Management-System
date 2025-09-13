@@ -30,7 +30,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+    <div className="min-h-[92.5vh] bg-gray-900 flex items-center justify-center px-4">
       <div className="bg-gray-800 w-full max-w-3xl rounded-xl shadow-lg p-6 md:p-10">
         <div className="flex border-b border-gray-700 mb-6">
           {["profile", "security"].map((tab) => (
