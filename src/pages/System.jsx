@@ -1,15 +1,18 @@
 import { useContext, useEffect } from "react"
 import { Link } from "react-router-dom";
 import { SystemContent } from "../context/SystemContentProvider";
+import { LabContent } from "../context/LabContentProvider";
 
 const System = () => {
-    const { systemFetchData,fetchSystems,deleteSystem } = useContext(SystemContent);
+    const { systemFetchData, fetchSystems, deleteSystem } = useContext(SystemContent);
     console.log(systemFetchData);
+    const { labfetchedData } = useContext(LabContent)
 
-    useEffect(() => {
-        fetchSystems()
-    }, [])
-
+    const getLabName = (labid) => {
+        return labfetchedData.find((lab) => {
+            return labid == lab.id
+        })?.name
+    }
 
     return (
         <div className="bg-[#111827] h-screen">
@@ -31,7 +34,13 @@ const System = () => {
                                     Systems Name
                                 </th>
                                 <th scope="col" className="px-6 py-3">
+                                    Lab Name
+                                </th>
+                                <th scope="col" className="px-6 py-3">
                                     Status
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Create Date
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Action
@@ -48,8 +57,25 @@ const System = () => {
                                         <td className="px-6 py-4 font-medium whitespace-nowrap text-white">
                                             {system.system_name}
                                         </td>
+                                        <td className="px-6 py-4 font-medium whitespace-nowrap text-white">
+                                            {getLabName(system.labid)}
+                                        </td>
                                         <td className="px-6 py-4">
-                                            {system.status}
+                                            <span
+                                                className={`px-3 py-1 rounded-full text-xs font-semibold
+      ${system.status === "Occupied" ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                                                        : system.status === "Available" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                                            : system.status === "In-Repairing" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                                                                : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                                                    }`}
+                                            >
+                                                {system.status}
+                                            </span>
+                                        </td>
+
+
+                                        <td className="px-6 py-4 font-medium whitespace-nowrap text-white">
+                                            {system.createdAt.toDate().toLocaleDateString()}
                                         </td>
                                         <td className="px-6 py-4 flex gap-3">
                                             <Link to={`/edit-system/${system.id}`} className="text-blue-500">Edit</Link>

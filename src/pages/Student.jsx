@@ -1,13 +1,28 @@
 import { useContext, useEffect } from "react";
 import { StudentContext } from "../context/StudentContentProvider";
 import { Link } from "react-router-dom";
+import { LabContent } from "../context/LabContentProvider";
+import { SystemContent } from "../context/SystemContentProvider";
 
 const Student = () => {
     const { fetchStudents, fetchedStudentData, deleteStudent } = useContext(StudentContext);
+    const {labfetchedData} = useContext(LabContent)
+    const {systemFetchData} = useContext(SystemContent)
 
     useEffect(() => {
         fetchStudents();
     }, []);
+
+    const getLabName = (labid) => {
+        return labfetchedData.find((lab) => {
+            return labid == lab.id
+        })?.name
+    }
+    const getPcName = (pcid) => {
+        return systemFetchData.find((system) => {
+            return pcid == system.id
+        })?.system_name
+    }
 
     return (
         <div className="bg-[#111827] h-screen">
@@ -27,7 +42,10 @@ const Student = () => {
                             <tr>
                                 <th className="px-6 py-3">Name</th>
                                 <th className="px-6 py-3">Grid</th>
+                                <th className="px-6 py-3">Lab Name</th>
+                                <th className="px-6 py-3">Pc Name</th>
                                 <th className="px-6 py-3">Course</th>
+                                <th className="px-6 py-3">Created At</th>
                                 <th className="px-6 py-3">Action</th>
                             </tr>
                         </thead>
@@ -42,14 +60,17 @@ const Student = () => {
                                             {stu.name}
                                         </td>
                                         <td className="px-6 py-4">{stu.grid}</td>
+                                        <td className="px-6 py-4">{getLabName(stu.labid)}</td>
+                                        <td className="px-6 py-4">{getPcName(stu.pcid)}</td>
                                         <td className="px-6 py-4">{stu.course}</td>
+                                        <td className="px-6 py-4">{stu.createdAt?.toDate().toLocaleDateString()}</td>
                                         <td className="px-6 py-4 flex gap-3">
                                             <Link to={`/edit-student/${stu.id}`} className="text-blue-500">
                                                 Edit
                                             </Link>
                                             <button
                                                 className="font-medium text-red-600 hover:underline"
-                                                onClick={() => deleteStudent(stu.id)}
+                                                onClick={() => deleteStudent(stu)}
                                             >
                                                 Delete
                                             </button>

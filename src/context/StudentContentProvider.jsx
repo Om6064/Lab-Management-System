@@ -8,10 +8,16 @@ export const StudentContext = createContext();
 const StudentContextProvider = ({ children }) => {
   const [fetchedStudentData, setFetchedStudentData] = useState([]);
 
-  
+
   const addStudent = async (data) => {
     try {
-      await addDoc(collection(db, "students"), data);
+      await addDoc(collection(db, "students"), {
+        ...data,
+        createdAt: new Date()
+      });
+      await updateDoc(doc(db, "system", data.pcid), {
+        status: "Occupied"
+      });
       toast.success("Student added successfully!");
       await fetchStudents();
     } catch (error) {
@@ -36,7 +42,7 @@ const StudentContextProvider = ({ children }) => {
   };
 
 
-  const deleteStudent = (id) => {
+  const deleteStudent = (data) => {
     toast(
       ({ closeToast }) => (
         <div className="flex flex-col gap-2">
@@ -45,10 +51,13 @@ const StudentContextProvider = ({ children }) => {
             <button
               onClick={async () => {
                 try {
-                  await deleteDoc(doc(db, "students", id));
+                  await deleteDoc(doc(db, "students", data.id));
                   toast.success("Student deleted successfully!");
                   await fetchStudents();
                   closeToast();
+                  await updateDoc(doc(db, "system", data.pcid), {
+                    status: "Available"
+                  });
                 } catch (error) {
                   console.error("Error deleting student:", error);
                   toast.error("Something went wrong");
@@ -71,12 +80,12 @@ const StudentContextProvider = ({ children }) => {
     );
   };
 
-  const editStudent = async(id,updatedStudent) => {
+  const editStudent = async (id, updatedStudent) => {
     try {
       const studentRef = doc(db, "students", id);
-      await updateDoc(studentRef,{
+      await updateDoc(studentRef, {
         ...updatedStudent,
-        updatedAt : new Date()
+        updatedAt: new Date()
       })
       toast.success("Student Updated Successfully")
     } catch (error) {

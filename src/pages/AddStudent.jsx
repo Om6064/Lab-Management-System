@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { StudentContext } from "../context/StudentContentProvider";
@@ -12,11 +12,13 @@ const AddStudent = () => {
     const { systemFetchData } = useContext(SystemContent)
     const [input, setInput] = useState({
         name: "",
+        email:"",
         labid: "",
         pcid: "",
         grid: "",
         course: "",
     });
+    const [filteredPc , setFilteredPc] = useState([])
     const [error, setError] = useState({});
     const navigate = useNavigate();
 
@@ -30,6 +32,9 @@ const AddStudent = () => {
         let tempObj = {};
         if (input.name.trim() === "") {
             tempObj.name = "Student Name is required.";
+        }
+        if (input.email.trim() === "") {
+            tempObj.email = "Email is required.";
         }
         if (input.labid.trim() === "") {
             tempObj.labid = "Lab Selection is required.";
@@ -58,6 +63,15 @@ const AddStudent = () => {
         }
     };
 
+    useEffect(() => {
+        if (input.labid) {
+            let availablePc =  systemFetchData.filter((pc) => {
+                return pc.labid == input.labid && pc.status == "Available"
+            })
+            setFilteredPc(availablePc)
+        }
+    },[input.labid])
+
 
     return (
         <div className="flex items-center justify-center min-h-[92.5vh] bg-gray-900 text-gray-200">
@@ -76,6 +90,52 @@ const AddStudent = () => {
                         value={input.name}
                     />
                     {error.name && <p className="mt-1 text-xs text-red-400">{error.name}</p>}
+                </div>
+
+                <div className="mb-5">
+                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-200">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        className="shadow-sm bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-colors"
+                        placeholder="test@gmail.com"
+                        onChange={handleChange}
+                        value={input.email}
+                    />
+                    {error.email && <p className="mt-1 text-xs text-red-400">{error.email}</p>}
+                </div>
+
+                <div className="mb-5">
+                    <label htmlFor="grid" className="block mb-2 text-sm font-medium text-gray-200">grid</label>
+                    <input
+                        type="number"
+                        id="grid"
+                        className="shadow-sm bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-colors"
+                        placeholder="e.g., 1111"
+                        onChange={handleChange}
+                        value={input.grid}
+                    />
+                    {error.grid && <p className="mt-1 text-xs text-red-400">{error.grid}</p>}
+                </div>
+
+
+                <div className="mb-5">
+                    <label htmlFor="course" className="block mb-2 text-sm font-medium text-gray-200">
+                        course
+                    </label>
+                    <select
+                        id="course"
+                        className="shadow-sm bg-gray-700 border border-gray-600 text-white text-sm rounded-lg 
+               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-colors"
+                        onChange={handleChange}
+                        value={input.course}
+                    >
+                        <option value="">-- Select course --</option>
+                        <option value="Full Stack Development">Full Stack Development</option>
+                        <option value="UI/UX">UI/UX</option>
+                        <option value="AI/ML/DS">AI/ML/DS</option>
+                    </select>
+                    {error.course && <p className="mt-1 text-xs text-red-400">{error.course}</p>}
                 </div>
 
                 <div className="mb-5">
@@ -112,45 +172,12 @@ const AddStudent = () => {
                     >
                         <option value="">-- Select System --</option>
                         {
-                            systemFetchData && systemFetchData.map((system) => {
+                            filteredPc && filteredPc.map((system) => {
                                 return <option key={system.id} value={system.id}>{system.system_name}</option>
                             })
                         }
                     </select>
                     {error.pcid && <p className="mt-1 text-xs text-red-400">{error.pcid}</p>}
-                </div>
-
-                <div className="mb-5">
-                    <label htmlFor="grid" className="block mb-2 text-sm font-medium text-gray-200">grid</label>
-                    <input
-                        type="number"
-                        id="grid"
-                        className="shadow-sm bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-colors"
-                        placeholder="e.g., 1111"
-                        onChange={handleChange}
-                        value={input.grid}
-                    />
-                    {error.grid && <p className="mt-1 text-xs text-red-400">{error.grid}</p>}
-                </div>
-
-
-                <div className="mb-5">
-                    <label htmlFor="course" className="block mb-2 text-sm font-medium text-gray-200">
-                        course
-                    </label>
-                    <select
-                        id="course"
-                        className="shadow-sm bg-gray-700 border border-gray-600 text-white text-sm rounded-lg 
-               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-colors"
-                        onChange={handleChange}
-                        value={input.course}
-                    >
-                        <option value="">-- Select course --</option>
-                        <option value="Full Stack Development">Full Stack Development</option>
-                        <option value="UI/UX">UI/UX</option>
-                        <option value="AI/ML/DS">AI/ML/DS</option>
-                    </select>
-                    {error.course && <p className="mt-1 text-xs text-red-400">{error.course}</p>}
                 </div>
 
 

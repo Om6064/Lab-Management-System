@@ -37,6 +37,9 @@ const Lab = () => {
                                 Location
                             </th>
                             <th scope="col" className="px-6 py-3">
+                                Create Date
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 Action
                             </th>
                         </tr>
@@ -56,6 +59,9 @@ const Lab = () => {
                                     </td>
                                     <td className="px-6 py-4">
                                         {lab.location}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {lab.createdAt.toDate().toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 flex gap-3">
                                          <Link to={`/edit-lab/${lab.id}`} className="text-blue-500">Edit</Link>

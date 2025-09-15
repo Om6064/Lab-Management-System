@@ -72,7 +72,10 @@ const SystemContentProvider = ({ children }) => {
 
   const editSystem = async (id, data) => {
     try {
-      await updateDoc(doc(db, "system", id), data);
+      await updateDoc(doc(db, "system", id), {
+        ...data,
+        updatedAt: new Date()
+      });
       toast.success("System Updated Successfully");
       fetchSystems();
     } catch (error) {
@@ -82,6 +85,7 @@ const SystemContentProvider = ({ children }) => {
 
   useEffect(() => {
     fetchSystems()
+    console.log(systemFetchData);
   },[])
 
   const value = {

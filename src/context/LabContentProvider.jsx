@@ -86,6 +86,7 @@ const LabContentProvider = ({ children }) => {
 
   useEffect(() => {
     fetchData();
+    console.log(labfetchedData);
   }, []);
 
 
