@@ -1,11 +1,15 @@
 import { addDoc, collection, deleteDoc, getDocs, doc, updateDoc } from "firebase/firestore";
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { db } from "../config/firebase";
+import { LabContent } from "./LabContentProvider";
+import { SystemContent } from "./SystemContentProvider";
 
 export const StudentContext = createContext();
 
 const StudentContextProvider = ({ children }) => {
+  const {fetchData} = useContext(LabContent)
+  const {fetchSystems} = useContext(SystemContent)
   const [fetchedStudentData, setFetchedStudentData] = useState([]);
 
 
@@ -20,6 +24,8 @@ const StudentContextProvider = ({ children }) => {
       });
       toast.success("Student added successfully!");
       await fetchStudents();
+      await fetchData()
+      await fetchSystems()
     } catch (error) {
       console.error("Error adding student:", error);
       toast.error("Something went wrong");

@@ -66,12 +66,13 @@ const Lab = () => {
                                     <td className="px-6 py-4 flex gap-3">
                                          <Link to={`/edit-lab/${lab.id}`} className="text-blue-500">Edit</Link>
                                         <button className="font-medium text-red-600 hover:underline" onClick={() => deleteLab(lab.id)}>Delete</button>
+                                        <Link to={`/viewpcbylab/${lab.id}`} className="font-medium hover:underline">View</Link>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr className="bg-gray-800">
-                                <td colSpan="4" className="px-6 py-4 text-center text-gray-400">
+                                <td colSpan="5" className="px-6 py-4 text-center text-gray-400">
                                     No labs added yet.
                                 </td>
                             </tr>

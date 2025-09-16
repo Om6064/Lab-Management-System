@@ -18,6 +18,7 @@ import AddSystem from "./pages/AddSystem"
 import EditSystem from "./pages/EditSystem"
 import AddStudent from "./pages/AddStudent"
 import EditStudents from "./pages/EditStudents"
+import ViewPcByLab from "./pages/ViewPcByLab"
 
 const App = () => {
     return (
@@ -39,6 +40,7 @@ const App = () => {
                     <Route path="/edit-lab/:id" element={<ProtectedRoute Comp={Editlabs} />} />
                     <Route path="/edit-system/:id" element={<ProtectedRoute Comp={EditSystem} />} />
                     <Route path="/edit-student/:id" element={<ProtectedRoute Comp={EditStudents} />} />
+                    <Route path="/viewpcbylab/:id" element={<ProtectedRoute Comp={ViewPcByLab} />} />
                     <Route path="*" element={<Error />} />
 
                 </Routes>

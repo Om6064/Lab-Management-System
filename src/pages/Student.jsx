@@ -79,7 +79,7 @@ const Student = () => {
                                 ))
                             ) : (
                                 <tr className="bg-gray-800">
-                                    <td colSpan="4" className="px-6 py-4 text-center text-gray-400">
+                                    <td colSpan="7" className="px-6 py-4 text-center text-gray-400">
                                         No Student added yet.
                                     </td>
                                 </tr>

@@ -4,7 +4,7 @@ import { SystemContent } from "../context/SystemContentProvider";
 import { LabContent } from "../context/LabContentProvider";
 
 const System = () => {
-    const { systemFetchData, fetchSystems, deleteSystem } = useContext(SystemContent);
+    const { systemFetchData, deleteSystem } = useContext(SystemContent);
     console.log(systemFetchData);
     const { labfetchedData } = useContext(LabContent)
 
@@ -85,7 +85,7 @@ const System = () => {
                                 ))
                             ) : (
                                 <tr className="bg-gray-800">
-                                    <td colSpan="4" className="px-6 py-4 text-center text-gray-400">
+                                    <td colSpan="5" className="px-6 py-4 text-center text-gray-400">
                                         No Systems added yet.
                                     </td>
                                 </tr>
