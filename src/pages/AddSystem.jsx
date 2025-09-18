@@ -10,7 +10,7 @@ const AddSystem = () => {
     const [input, setInput] = useState({
         system_name: "",
         labid: "",
-        status: "",
+        status: "Available",
     });
     const [error, setError] = useState({});
     const navigate = useNavigate();
@@ -29,9 +29,9 @@ const AddSystem = () => {
         if (input.labid.trim() === "") {
             tempObj.labid = "Lab Id is required.";
         }
-        if (input.status.trim() === "") {
-            tempObj.status = "Status is required.";
-        }
+        // if (input.status.trim() === "") {
+        //     tempObj.status = "Status is required.";
+        // }
         setError(tempObj);
 
         if (Object.keys(tempObj).length === 0) {
@@ -88,7 +88,7 @@ const AddSystem = () => {
                 </div>
 
 
-                <div className="mb-5">
+                {/* <div className="mb-5">
                     <label htmlFor="status" className="block mb-2 text-sm font-medium text-gray-200">
                         Status
                     </label>
@@ -105,7 +105,7 @@ const AddSystem = () => {
                         <option value="In-Repairing">In-Repairing</option>
                     </select>
                     {error.status && <p className="mt-1 text-xs text-red-400">{error.status}</p>}
-                </div>
+                </div> */}
 
 
 

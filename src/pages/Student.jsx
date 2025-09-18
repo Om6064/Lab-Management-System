@@ -61,7 +61,7 @@ const Student = () => {
                                             {stu.name}
                                         </td>
                                         <td className="px-6 py-4">{stu.grid}</td>
-                                        <td className="px-6 py-4">{getLabName(stu.labid)}</td>
+                                        <td className="px-6 py-4">{getLabName(stu.labid) || "Not-Assigned"}</td>
                                         <td className="px-6 py-4">
                                              {getPcName(stu.pcid) || "Not-Assigned"}
                                         </td>

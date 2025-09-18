@@ -5,7 +5,7 @@ import { LabContent } from "../context/LabContentProvider";
 import BackToDashboard from "../components/BackToDashboard";
 
 const System = () => {
-    const { systemFetchData, deleteSystem } = useContext(SystemContent);
+    const { systemFetchData, deleteSystem,changeStateToRepair } = useContext(SystemContent);
     console.log(systemFetchData);
     const { labfetchedData } = useContext(LabContent)
 
@@ -81,6 +81,11 @@ const System = () => {
                                         <td className="px-6 py-4 flex gap-3">
                                             <Link to={`/edit-system/${system.id}`} className="text-blue-500">Edit</Link>
                                             <button className="font-medium text-red-600 hover:underline" onClick={() => deleteSystem(system.id)}>Delete</button>
+                                            {
+                                                system.status !== "In-Repairing" && <button className="font-medium text-yellow-600 hover:underline" onClick={() => {
+                                                    changeStateToRepair(system.id)
+                                                }}>Go To Repair</button>
+                                            }
                                             {
                                                 system.status === "Occupied" && <Link to={`/viewstudentbypc/${system.id}`} className="font-medium hover:underline ">View</Link>
                                             }
