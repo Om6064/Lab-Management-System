@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where, writeBatch } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 import { db } from "../config/firebase";
 import { toast } from "react-toastify";
@@ -44,11 +44,25 @@ const SystemContentProvider = ({ children }) => {
             <button
               onClick={async () => {
                 try {
+                  const studentQuery = query(
+                    collection(db, "students"),
+                    where("systemId", "==", id)
+                  );
+                  const studentSnap = await getDocs(studentQuery);
+
+                  const batch = writeBatch(db);
+                  studentSnap.forEach((studentDoc) => {
+                    batch.update(studentDoc.ref, { systemId: null });
+                  });
+                  await batch.commit();
+
                   await deleteDoc(doc(db, "system", id));
+
                   toast.success("System Deleted Successfully");
                   fetchSystems();
                   closeToast();
                 } catch (error) {
+                  console.error("Error deleting system:", error);
                   toast.error("Something Went Wrong");
                 }
               }}
@@ -86,7 +100,7 @@ const SystemContentProvider = ({ children }) => {
   useEffect(() => {
     fetchSystems()
     console.log(systemFetchData);
-  },[])
+  }, [])
 
   const value = {
     addSystem,

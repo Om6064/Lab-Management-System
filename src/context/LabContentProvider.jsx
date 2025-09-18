@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, writeBatch } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 import { db } from "../config/firebase";
 import { toast } from "react-toastify";
@@ -45,8 +45,16 @@ const LabContentProvider = ({ children }) => {
             <button
               onClick={async () => {
                 try {
-                  await deleteDoc(doc(db, "labs", id));
-                  toast.success("Lab Deleted Successfully");
+                  const qry = query(collection(db, "pcs"), where("labId", "==", id));
+                  const toUpdatedPcSnapshot = await getDocs(qry);
+
+                  const batch = writeBatch(db);
+                  toUpdatedPcSnapshot.forEach((pcDoc) => {
+                    batch.update(pcDoc.ref, { labId: null });
+                  });
+
+                  await batch.commit();
+                  await deleteDoc(doc(db, "labs", id)); // use id instead of labId
                   fetchData();
                   closeToast();
                 } catch (error) {
@@ -69,6 +77,7 @@ const LabContentProvider = ({ children }) => {
       { autoClose: false }
     );
   };
+
 
   const editLab = async (id, updatedData) => {
     try {

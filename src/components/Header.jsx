@@ -64,7 +64,7 @@ const Header = () => {
                 }`}>
                 Systems
               </Link>
-              <Link to="/lab" className={`font-semibold ${pathname === "/lab" || pathname === "/addlabs" || pathname.includes("/edit-lab")
+              <Link to="/lab" className={`font-semibold ${pathname === "/lab" || pathname === "/addlabs" || pathname.includes("/viewpcbylab")  || pathname.includes("/edit-lab")
                 ? "text-blue-500"
                 : "text-gray-300 hover:text-blue-500"
                 }`}>

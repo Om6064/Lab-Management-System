@@ -3,11 +3,12 @@ import { StudentContext } from "../context/StudentContentProvider";
 import { Link } from "react-router-dom";
 import { LabContent } from "../context/LabContentProvider";
 import { SystemContent } from "../context/SystemContentProvider";
+import BackToDashboard from "../components/BackToDashboard";
 
 const Student = () => {
     const { fetchStudents, fetchedStudentData, deleteStudent } = useContext(StudentContext);
-    const {labfetchedData} = useContext(LabContent)
-    const {systemFetchData} = useContext(SystemContent)
+    const { labfetchedData } = useContext(LabContent)
+    const { systemFetchData } = useContext(SystemContent)
 
     useEffect(() => {
         fetchStudents();
@@ -61,7 +62,10 @@ const Student = () => {
                                         </td>
                                         <td className="px-6 py-4">{stu.grid}</td>
                                         <td className="px-6 py-4">{getLabName(stu.labid)}</td>
-                                        <td className="px-6 py-4">{getPcName(stu.pcid)}</td>
+                                        <td className="px-6 py-4">
+                                             {getPcName(stu.pcid) || "Not-Assigned"}
+                                        </td>
+
                                         <td className="px-6 py-4">{stu.course}</td>
                                         <td className="px-6 py-4">{stu.createdAt?.toDate().toLocaleDateString()}</td>
                                         <td className="px-6 py-4 flex gap-3">
@@ -86,6 +90,9 @@ const Student = () => {
                             )}
                         </tbody>
                     </table>
+                </div>
+                <div className="mt-5">
+                    <BackToDashboard />
                 </div>
             </div>
         </div>

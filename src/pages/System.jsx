@@ -1,7 +1,8 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { Link } from "react-router-dom";
 import { SystemContent } from "../context/SystemContentProvider";
 import { LabContent } from "../context/LabContentProvider";
+import BackToDashboard from "../components/BackToDashboard";
 
 const System = () => {
     const { systemFetchData, deleteSystem } = useContext(SystemContent);
@@ -58,7 +59,7 @@ const System = () => {
                                             {system.system_name}
                                         </td>
                                         <td className="px-6 py-4 font-medium whitespace-nowrap text-white">
-                                            {getLabName(system.labid)}
+                                            {getLabName(system.labid) || "Not-Assign"}
                                         </td>
                                         <td className="px-6 py-4">
                                             <span
@@ -80,6 +81,9 @@ const System = () => {
                                         <td className="px-6 py-4 flex gap-3">
                                             <Link to={`/edit-system/${system.id}`} className="text-blue-500">Edit</Link>
                                             <button className="font-medium text-red-600 hover:underline" onClick={() => deleteSystem(system.id)}>Delete</button>
+                                            {
+                                                system.status === "Occupied" && <Link to={`/viewstudentbypc/${system.id}`} className="font-medium hover:underline ">View</Link>
+                                            }
                                         </td>
                                     </tr>
                                 ))
@@ -92,6 +96,9 @@ const System = () => {
                             )}
                         </tbody>
                     </table>
+                </div>
+                <div className="mt-5">
+                    <BackToDashboard />
                 </div>
             </div>
         </div>

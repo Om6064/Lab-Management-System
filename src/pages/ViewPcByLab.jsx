@@ -26,35 +26,69 @@ const ViewPcByLab = () => {
   }, [id]);
 
   return (
-    <div className="p-6 text-white">
-      <h2 className="text-2xl font-bold mb-4">PCs in this Lab</h2>
+    <div className="bg-[#111827] h-screen p-6">
 
-      {systems.length > 0 ? (
-        <table className="w-full border border-gray-600">
-          <thead>
-            <tr className="bg-gray-700">
-              <th className="p-2">System Name</th>
-              <th className="p-2">Status</th>
-              <th className="p-2">Created At</th>
+     <div className="container mx-auto">
+       <h2 className=" text-2xl font-bold text-white mb-6">PCs in this Lab</h2>
+
+      <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-400">
+          <thead className="text-xs uppercase bg-gray-700 text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">System Name</th>
+              <th scope="col" className="px-6 py-3">Status</th>
+              <th scope="col" className="px-6 py-3">Created At</th>
+              <th scope="col" className="px-6 py-3">Action</th>
             </tr>
           </thead>
           <tbody>
-            {systems.map((sys) => (
-              <tr key={sys.id} className="border-b border-gray-600">
-                <td className="p-2">{sys.system_name}</td>
-                <td className="p-2">{sys.status}</td>
-                <td className="p-2">
-                  {sys.createdAt?.toDate
-                    ? sys.createdAt.toDate().toLocaleDateString()
-                    : "N/A"}
+            {systems.length > 0 ? (
+              systems.map((sys) => (
+                <tr 
+                  key={sys.id} 
+                  className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600"
+                >
+                  <td className="px-6 py-4 font-medium whitespace-nowrap text-white">
+                    {sys.system_name}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold
+                        ${sys.status === "Occupied"
+                          ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                          : sys.status === "Available"
+                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                          : sys.status === "In-Repairing"
+                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                          : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                        }`}
+                    >
+                      {sys.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    {sys.createdAt?.toDate
+                      ? sys.createdAt.toDate().toLocaleDateString()
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4 flex gap-3">
+                    {/* Add buttons as per your need */}
+                    <button className="text-blue-500 hover:underline">Edit</button>
+                    <button className="text-red-500 hover:underline">Delete</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className="bg-gray-800">
+                <td colSpan="4" className="px-6 py-4 text-center text-gray-400">
+                  No PCs found for this lab.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
-      ) : (
-        <p>No PCs found for this lab.</p>
-      )}
+      </div>
+     </div>
     </div>
   );
 };
