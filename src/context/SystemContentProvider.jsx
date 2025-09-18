@@ -1,7 +1,8 @@
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where, writeBatch } from "firebase/firestore";
-import { createContext, useEffect, useState } from "react";
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where, writeBatch, increment, getDoc } from "firebase/firestore";
+import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../config/firebase";
 import { toast } from "react-toastify";
+import { LabContent } from "./LabContentProvider";
 
 export const SystemContent = createContext();
 
@@ -10,17 +11,37 @@ const SystemContentProvider = ({ children }) => {
   const systemCollectionRef = collection(db, "system");
 
   const addSystem = async (data) => {
-    try {
-      await addDoc(systemCollectionRef, {
-        ...data,
-        createdAt: new Date(),
-      });
-      toast.success("System Added Successfully");
-      fetchSystems();
-    } catch (error) {
-      toast.error("Something Went Wrong");
+  try {
+  
+    const labRef = doc(db, "labs", data.labid);
+    const labSnap = await getDoc(labRef);
+
+    const labData = labSnap.data();
+
+    if (labData.capacity <= 0) {
+      toast.error("No capacity left in this lab");
+      return;
     }
-  };
+
+
+    await addDoc(systemCollectionRef, {
+      ...data,
+      createdAt: new Date(),
+    });
+
+    await updateDoc(labRef, {
+      capacity: increment(-1),
+    });
+
+    toast.success("System Added Successfully");
+    fetchSystems();
+  } catch (error) {
+    console.error("Error adding system:", error);
+    toast.error("Something Went Wrong");
+  }
+};
+
+
 
   const fetchSystems = async () => {
     try {
@@ -44,6 +65,11 @@ const SystemContentProvider = ({ children }) => {
             <button
               onClick={async () => {
                 try {
+                  const systemRef = doc(db, "system", id);
+                  const systemSnap = await getDoc(systemRef);
+                  const systemData = systemSnap.data();
+
+                  
                   const studentQuery = query(
                     collection(db, "students"),
                     where("systemId", "==", id)
@@ -56,7 +82,15 @@ const SystemContentProvider = ({ children }) => {
                   });
                   await batch.commit();
 
-                  await deleteDoc(doc(db, "system", id));
+                
+                  await deleteDoc(systemRef);
+
+              
+                  if (systemData?.labid) {
+                    await updateDoc(doc(db, "labs", systemData.labid), {
+                      capacity: increment(1),
+                    });
+                  }
 
                   toast.success("System Deleted Successfully");
                   fetchSystems();
@@ -84,18 +118,45 @@ const SystemContentProvider = ({ children }) => {
   };
 
 
+
   const editSystem = async (id, data) => {
     try {
-      await updateDoc(doc(db, "system", id), {
+      const systemRef = doc(db, "system", id);
+
+    
+      await updateDoc(systemRef, {
         ...data,
         updatedAt: new Date()
       });
+
+
+      if (data.status === "Available") {
+        const studentQuery = query(
+          collection(db, "students"),
+          where("pcid", "==", id)
+        );
+        const studentSnap = await getDocs(studentQuery);
+
+        const batch = writeBatch(db);
+        studentSnap.forEach((studentDoc) => {
+          batch.update(studentDoc.ref, {
+            pcName: "Not Assigned",
+            labName: "Not Assigned",
+            pcid: null,
+            updatedAt: new Date()
+          });
+        });
+        await batch.commit();
+      }
+
       toast.success("System Updated Successfully");
       fetchSystems();
     } catch (error) {
+      console.error("Error updating system:", error);
       toast.error("Something Went Wrong");
     }
   };
+
 
   useEffect(() => {
     fetchSystems()

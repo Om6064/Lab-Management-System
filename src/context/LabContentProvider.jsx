@@ -12,10 +12,14 @@ const LabContentProvider = ({ children }) => {
 
   const addLabs = async (labs) => {
     try {
-      await addDoc(labCollectionRef, {
-        ...labs,
+      const { capacity, ...rest } = labs;
+      const obj = {
+        ...rest,
+        capacity: Number(capacity),
         createdAt: new Date(),
-      });
+      };
+
+      await addDoc(collection(db, "labs"), obj);
       // toast.success("Lab Added Successfully");
       fetchData();
     } catch (error) {

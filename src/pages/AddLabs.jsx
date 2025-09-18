@@ -7,7 +7,7 @@ const AddLabs = () => {
     const { addLabs } = useContext(LabContent);
     const [input, setInput] = useState({
         name: "",
-        capacity: "",
+        capacity: 0,
         location: "",
     });
     const [error, setError] = useState({});
