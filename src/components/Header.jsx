@@ -8,6 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // console.log(pathname);
 
   const handleLogout = async () => {
     await logout();
@@ -20,8 +21,8 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-gray-900 text-white shadow-md">
-      <nav className="max-w-screen-2xl mx-auto px-3 sm:px-4 py-3 md:py-4">
+    <header className={`${pathname == "/" && "ml-64"} bg-gray-900 text-white shadow-md`}>
+      <nav className={`${pathname !== "/" && "container"} mx-auto px-3 sm:px-4 py-3 md:py-4`}>
         <div className="flex items-center justify-between">
           <Link
             to={"/"}
@@ -58,7 +59,7 @@ const Header = () => {
               >
                 Dashboard
               </Link>
-              <Link to="/systems" className={`font-semibold ${pathname === "/systems" || pathname === "/addsystems" || pathname.includes("/edit-system")
+              <Link to="/systems" className={`font-semibold ${pathname === "/systems" || pathname === "/addsystems" || pathname.includes("/viewstudentbypc") || pathname.includes("/edit-system")
                 ? "text-blue-500"
                 : "text-gray-300 hover:text-blue-500"
                 }`}>

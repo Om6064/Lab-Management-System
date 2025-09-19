@@ -59,15 +59,16 @@ const StudentContextProvider = ({ children }) => {
                 try {
                   await deleteDoc(doc(db, "students", data.id));
                   toast.success("Student deleted successfully!");
-                  await fetchStudents();
                   closeToast();
                   await updateDoc(doc(db, "system", data.pcid), {
                     status: "Available"
                   });
+                  await fetchSystems()
                 } catch (error) {
                   console.error("Error deleting student:", error);
-                  toast.error("Something went wrong");
+                  // toast.error("Something went wrong");
                 }
+                await fetchStudents();
               }}
               className="px-3 py-1 bg-red-500 text-white rounded"
             >

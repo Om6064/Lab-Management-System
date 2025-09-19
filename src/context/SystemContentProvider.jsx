@@ -93,12 +93,12 @@ const SystemContentProvider = ({ children }) => {
                   }
 
                   toast.success("System Deleted Successfully");
-                  fetchSystems();
                   closeToast();
                 } catch (error) {
                   console.error("Error deleting system:", error);
-                  toast.error("Something Went Wrong");
+                  // toast.error("Something Went Wrong");
                 }
+                await fetchSystems();
               }}
               className="px-3 py-1 bg-red-500 text-white rounded"
             >
@@ -197,6 +197,11 @@ const SystemContentProvider = ({ children }) => {
     fetchSystems()
     console.log(systemFetchData);
   }, [])
+
+  useEffect(() => {
+    fetchSystems()
+    console.log(systemFetchData);
+  }, [systemFetchData.status])
 
   const value = {
     addSystem,

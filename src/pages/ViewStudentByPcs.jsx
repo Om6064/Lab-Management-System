@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { ArrowLeft } from "lucide-react";
 
 const ViewStudentByPc = () => {
     const { id } = useParams();
@@ -72,6 +73,15 @@ const ViewStudentByPc = () => {
                         </tbody>
                     </table>
                 </div>
+            <div className="mt-6">
+                <Link
+                    to="/systems"
+                    className="inline-flex items-center gap-2 bg-gray-700 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition-colors duration-200"
+                >
+                    <ArrowLeft className="w-5 h-5" />
+                    Back to Systems
+                </Link>
+            </div>
             </div>
         </div>
     );
