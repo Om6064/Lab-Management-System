@@ -8,22 +8,27 @@ const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
 
   const handleLogout = async () => {
     await logout();
     navigate("/login");
   };
-  console.log(pathname);
-  
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
-    <header className={`${pathname == "/" && "ml-64"} bg-gray-900 text-white shadow-md`}>
-      <nav className={`${pathname !== "/" && "container"} mx-auto px-3 sm:px-4 py-3 md:py-4`}>
+    <header
+      className={`${pathname === "/" ? "ml-64" : ""} bg-gray-900 text-white shadow-md`}
+    >
+      <nav
+        className={`${
+          pathname !== "/" ? "container" : ""
+        } mx-auto px-3 sm:px-4 py-3 md:py-4`}
+      >
         <div className="flex items-center justify-between">
+          {/* Logo */}
           <Link
             to={"/"}
             className="flex items-center space-x-2 transition-transform hover:scale-105"
@@ -47,43 +52,61 @@ const Header = () => {
             </span>
           </Link>
 
-          {
-            user &&
-            <div className="hidden md:flex flex-grow justify-center space-x-8 lg:space-x-12">
+          {/* Desktop Nav */}
+          {user && (
+            <div className="hidden md:flex flex-grow justify-center space-x-6 lg:space-x-10">
               <Link
                 to="/"
-                className={`font-semibold ${pathname === "/"
-                  ? "text-blue-500"
-                  : "text-gray-300 hover:text-blue-500"
-                  }`}
+                className={`font-semibold ${
+                  pathname === "/" ? "text-blue-500" : "text-gray-300 hover:text-blue-500"
+                }`}
               >
                 Dashboard
               </Link>
-              <Link to="/systems" className={`font-semibold ${pathname === "/systems" || pathname === "/addsystems" || pathname.includes("/viewstudentbypc") || pathname.includes("/edit-system")
-                ? "text-blue-500"
-                : "text-gray-300 hover:text-blue-500"
-                }`}>
+              <Link
+                to="/systems"
+                className={`font-semibold ${
+                  ["/systems", "/addsystems"].includes(pathname) ||
+                  pathname.includes("/viewstudentbypc") ||
+                  pathname.includes("/edit-system")
+                    ? "text-blue-500"
+                    : "text-gray-300 hover:text-blue-500"
+                }`}
+              >
                 Systems
               </Link>
-              <Link to="/lab" className={`font-semibold ${pathname === "/lab" || pathname === "/addlabs" || pathname.includes("/viewpcbylab")  || pathname.includes("/edit-lab")
-                ? "text-blue-500"
-                : "text-gray-300 hover:text-blue-500"
-                }`}>
+              <Link
+                to="/lab"
+                className={`font-semibold ${
+                  ["/lab", "/addlabs"].includes(pathname) ||
+                  pathname.includes("/viewpcbylab") ||
+                  pathname.includes("/edit-lab")
+                    ? "text-blue-500"
+                    : "text-gray-300 hover:text-blue-500"
+                }`}
+              >
                 Lab
               </Link>
-              <Link to="/student" className={`font-semibold ${pathname === "/student" || pathname === "/addstudent" || pathname.includes("/edit-student")
-                ? "text-blue-500"
-                : "text-gray-300 hover:text-blue-500"
-                }`}>
+              <Link
+                to="/student"
+                className={`font-semibold ${
+                  ["/student", "/addstudent"].includes(pathname) ||
+                  pathname.includes("/edit-student")
+                    ? "text-blue-500"
+                    : "text-gray-300 hover:text-blue-500"
+                }`}
+              >
                 Student
               </Link>
             </div>
-          }
+          )}
 
+          {/* User Dropdown */}
+          <div className="hidden md:block">
+            <UserDropdown user={user} localHandleLogout={handleLogout} />
+          </div>
 
-          <UserDropdown user={user} localHandleLogout={handleLogout} />
-
-
+          {/* Mobile Menu Button */}
           <button
             onClick={toggleMobileMenu}
             type="button"
@@ -107,25 +130,54 @@ const Header = () => {
           </button>
         </div>
 
-        <div className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"}`}>
-          <ul className="flex flex-col mt-3 space-y-2 font-medium">
+        {/* Mobile Nav */}
+        <div
+          className={`md:hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? "max-h-screen opacity-100 mt-3" : "max-h-0 opacity-0 overflow-hidden"
+          }`}
+        >
+          <ul className="flex flex-col space-y-2 font-medium bg-gray-800 rounded-lg p-3">
             <li>
-              <Link to="/" onClick={toggleMobileMenu} className="block py-2 px-3 text-white hover:bg-gray-700">
+              <Link
+                to="/"
+                onClick={toggleMobileMenu}
+                className={`block py-2 px-3 rounded ${
+                  pathname === "/" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+                }`}
+              >
                 Dashboard
               </Link>
             </li>
             <li>
-              <Link to="/systems" onClick={toggleMobileMenu} className="block py-2 px-3 text-white hover:bg-gray-700">
+              <Link
+                to="/systems"
+                onClick={toggleMobileMenu}
+                className={`block py-2 px-3 rounded ${
+                  pathname === "/systems" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+                }`}
+              >
                 Systems
               </Link>
             </li>
             <li>
-              <Link to="/lab" onClick={toggleMobileMenu} className="block py-2 px-3 text-white hover:bg-gray-700">
+              <Link
+                to="/lab"
+                onClick={toggleMobileMenu}
+                className={`block py-2 px-3 rounded ${
+                  pathname === "/lab" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+                }`}
+              >
                 Lab
               </Link>
             </li>
             <li>
-              <Link to="/student" onClick={toggleMobileMenu} className="block py-2 px-3 text-white hover:bg-gray-700">
+              <Link
+                to="/student"
+                onClick={toggleMobileMenu}
+                className={`block py-2 px-3 rounded ${
+                  pathname === "/student" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+                }`}
+              >
                 Student
               </Link>
             </li>
@@ -133,9 +185,7 @@ const Header = () => {
             {user && (
               <>
                 <li className="border-t border-gray-700 pt-2">
-                  <span className="block px-3 py-1 text-gray-400 text-xs">
-                    Signed in as
-                  </span>
+                  <span className="block px-3 py-1 text-gray-400 text-xs">Signed in as</span>
                   <span className="block px-3 text-white text-sm font-bold truncate">
                     {user.email}
                   </span>
@@ -146,7 +196,7 @@ const Header = () => {
                       handleLogout();
                       toggleMobileMenu();
                     }}
-                    className="block w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-700"
+                    className="block w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-700 rounded"
                   >
                     Logout
                   </button>
