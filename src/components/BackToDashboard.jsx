@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react"; // icon library (comes with shadcn/lucide)
+import { ArrowLeft } from "lucide-react";
 
 const BackToDashboard = () => {
   return (

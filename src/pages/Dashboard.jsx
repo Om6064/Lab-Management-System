@@ -1,12 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { db } from "../config/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import * as d3 from "d3";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { LayoutDashboard, Monitor, Users, Settings, Building2 } from "lucide-react";
+import { AuthContext } from "../context/AuthContentProvider";
+
 
 
 const Dashboard = () => {
+  const {logout} = useContext(AuthContext)
   const [stats, setStats] = useState({
     totalLabs: 0,
     totalPCs: 0,
@@ -18,7 +21,7 @@ const Dashboard = () => {
   
   
 
-  // Refs for multiple charts
+  
   const barChartRef = useRef();
   const pieChartRef = useRef();
   const lineChartRef = useRef();
@@ -61,7 +64,6 @@ const Dashboard = () => {
       { label: "Students", value: stats.totalStudents },
     ];
 
-    // ===== BAR CHART =====
     d3.select(barChartRef.current).selectAll("*").remove();
     const width = 400, height = 300, margin = { top: 20, right: 30, bottom: 40, left: 50 };
 
@@ -95,7 +97,7 @@ const Dashboard = () => {
       .selectAll("text")
       .attr("fill", "white");
 
-    // ===== PIE CHART =====
+   
     d3.select(pieChartRef.current).selectAll("*").remove();
     const pieSvg = d3.select(pieChartRef.current)
       .append("svg")
@@ -128,7 +130,7 @@ const Dashboard = () => {
       .attr("fill", "white")
       .style("font-size", "12px");
 
-    // ===== LINE CHART =====
+    
     d3.select(lineChartRef.current).selectAll("*").remove();
     const lineData = [
       { month: "Jan", value: stats.totalStudents * 0.5 },
@@ -164,7 +166,7 @@ const Dashboard = () => {
     lineSvg.append("g").attr("transform", `translate(0,${lh - 40})`).call(d3.axisBottom(xLine)).selectAll("text").attr("fill", "white");
     lineSvg.append("g").attr("transform", `translate(50,0)`).call(d3.axisLeft(yLine)).selectAll("text").attr("fill", "white");
 
-    // ===== HORIZONTAL BAR CHART =====
+    
     d3.select(horizontalChartRef.current).selectAll("*").remove();
     const hdata = [
       { label: "Labs", value: stats.totalLabs },
@@ -202,7 +204,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex">
-      {/* Sidebar */}
+      
       <aside className="w-64 bg-gray-900 text-gray-200 min-h-screen p-6 flex flex-col shadow-xl fixed top-0">
         <h2 className="text-2xl font-bold text-blue-400 mb-10 text-center tracking-wide">
           Admin Panel
@@ -285,9 +287,9 @@ const Dashboard = () => {
           </li>
         </ul>
 
-        {/* Logout */}
+       
         <div className="mt-auto pt-6 border-t border-gray-700">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500 hover:text-white transition-colors duration-200">
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500 hover:text-white transition-colors duration-200" onClick={logout}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -302,14 +304,14 @@ const Dashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
+     
       <main className="flex-1 bg-gray-900 text-white ml-64 p-8">
-        {/* <Header className="ml-64"/> */}
+       
         <h1 className="text-4xl font-bold mb-8 text-blue-400">
           Dashboard Overview
         </h1>
 
-        {/* Cards Section */}
+      
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-gray-800 p-6 rounded-lg shadow-xl flex items-center space-x-4">
             <div className="bg-blue-600 p-3 rounded-full"></div>
@@ -341,7 +343,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Charts */}
+      
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-gray-800 p-6 rounded-lg shadow-xl">
             <h2 className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Stats Overview</h2>
@@ -361,7 +363,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Recent Activity */}
+    
         <div className="bg-gray-800 p-6 rounded-lg shadow-xl">
           <h2 className="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Recent Activity</h2>
           {recentActivity.length > 0 ? (

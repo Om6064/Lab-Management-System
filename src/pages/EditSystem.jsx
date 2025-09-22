@@ -90,6 +90,7 @@ const EditSystem = () => {
             className="shadow-sm bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5"
             onChange={handleChange}
             value={input.status}
+            disabled
           >
             <option value="">-- Select Status --</option>
             <option value="Occupied">Occupied</option>

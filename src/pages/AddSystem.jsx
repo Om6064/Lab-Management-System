@@ -87,28 +87,6 @@ const AddSystem = () => {
                     {error.labid && <p className="mt-1 text-xs text-red-400">{error.labid}</p>}
                 </div>
 
-
-                {/* <div className="mb-5">
-                    <label htmlFor="status" className="block mb-2 text-sm font-medium text-gray-200">
-                        Status
-                    </label>
-                    <select
-                        id="status"
-                        className="shadow-sm bg-gray-700 border border-gray-600 text-white text-sm rounded-lg 
-               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-colors"
-                        onChange={handleChange}
-                        value={input.status}
-                    >
-                        <option value="">-- Select Status --</option>
-                        <option value="Occupied">Occupied</option>
-                        <option value="Available">Available</option>
-                        <option value="In-Repairing">In-Repairing</option>
-                    </select>
-                    {error.status && <p className="mt-1 text-xs text-red-400">{error.status}</p>}
-                </div> */}
-
-
-
                 <button
                     type="submit"
                     className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">

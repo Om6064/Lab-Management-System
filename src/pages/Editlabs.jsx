@@ -43,17 +43,19 @@ const Editlabs = () => {
 
     let tempObj = {};
     if (input.name.trim() === "") tempObj.name = "Name is required.";
-    if (input.capacity.trim() === "") tempObj.capacity = "Capacity is required.";
+    if (!input.capacity) tempObj.capacity = "Capacity is required.";
     if (input.location.trim() === "") tempObj.location = "Location is required.";
     setError(tempObj);
 
     if (Object.keys(tempObj).length === 0) {
       await editLab(id, input);
+      await fetchData();
       navigate("/lab");
     } else {
       toast.error("Please fill out all required fields.");
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-[92.5vh] bg-gray-900 text-gray-200">
@@ -65,7 +67,7 @@ const Editlabs = () => {
           Edit Lab
         </h2>
 
-    
+
         <div className="mb-5">
           <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-200">
             Lab Name
@@ -81,7 +83,7 @@ const Editlabs = () => {
           {error.name && <p className="mt-1 text-xs text-red-400">{error.name}</p>}
         </div>
 
-    
+
         <div className="mb-5">
           <label htmlFor="capacity" className="block mb-2 text-sm font-medium text-gray-200">
             Capacity
@@ -93,11 +95,12 @@ const Editlabs = () => {
             placeholder="e.g., 40"
             onChange={handleChange}
             value={input.capacity}
+            readOnly
           />
           {error.capacity && <p className="mt-1 text-xs text-red-400">{error.capacity}</p>}
         </div>
 
-        
+
         <div className="mb-6">
           <label htmlFor="location" className="block mb-2 text-sm font-medium text-gray-200">
             Location
