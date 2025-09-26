@@ -5,7 +5,7 @@ import { LabContent } from "../context/LabContentProvider";
 import BackToDashboard from "../components/BackToDashboard";
 
 const System = () => {
-  const { systemFetchData, deleteSystem, changeStateToRepair } = useContext(SystemContent);
+  const { systemFetchData, deleteSystem, changeStateToRepair,changeStateToAvailable } = useContext(SystemContent);
   const { labfetchedData } = useContext(LabContent);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +14,7 @@ const System = () => {
     return labfetchedData.find((lab) => labid === lab.id)?.name;
   };
 
-  
+
   const filteredSystems = systemFetchData.filter((system) => {
     const labName = getLabName(system.labid) || "Not-Assign";
     return [system.system_name, labName, system.status]
@@ -29,7 +29,7 @@ const System = () => {
         <div className="flex flex-col md:flex-row mt-8 md:mt-12 justify-between items-center mb-6 gap-4">
           <h2 className="font-semibold text-2xl md:text-3xl text-white">Systems</h2>
           <div className="flex gap-3 w-full md:w-auto">
-        
+
             <input
               type="text"
               placeholder="Search systems..."
@@ -75,10 +75,10 @@ const System = () => {
                           ${system.status === "Occupied"
                             ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
                             : system.status === "Available"
-                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                            : system.status === "In-Repairing"
-                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-                            : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                              : system.status === "In-Repairing"
+                                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                                : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
                           }`}
                       >
                         {system.status}
@@ -95,22 +95,22 @@ const System = () => {
                       >
                         Delete
                       </button>
-                      {system.status !== "In-Repairing" && (
+                      {system.status !== "In-Repairing" ? (
                         <button
                           className="font-medium text-yellow-600 hover:underline"
                           onClick={() => changeStateToRepair(system.id)}
                         >
                           Go To Repair
                         </button>
-                      )}
-                      {system.status === "Occupied" && (
-                        <Link
-                          to={`/viewstudentbypc/${system.id}`}
-                          className="font-medium hover:underline "
+                      ) : (
+                        <button
+                          className="font-medium text-yellow-600 hover:underline"
+                          onClick={() => changeStateToAvailable(system.id)}
                         >
-                          View
-                        </Link>
+                          Make Available
+                        </button>
                       )}
+
                     </td>
                   </tr>
                 ))

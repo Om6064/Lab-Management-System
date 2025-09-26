@@ -165,7 +165,7 @@ const SystemContentProvider = ({ children }) => {
         updatedAt: new Date(),
       });
 
-    
+
       const studentQuery = query(
         collection(db, "students"),
         where("pcid", "==", id)
@@ -191,6 +191,23 @@ const SystemContentProvider = ({ children }) => {
     }
   };
 
+  const changeStateToAvailable = async (id) => {
+    try {
+      const systemRef = doc(db, "system", id);
+      await updateDoc(systemRef, {
+        status: "Available",
+        updatedAt: new Date(),
+      });
+
+      toast.success("System marked as Available");
+      fetchSystems();
+    } catch (error) {
+      console.error("Error changing state to available:", error);
+      toast.error("Something Went Wrong");
+    }
+  };
+
+
 
 
   useEffect(() => {
@@ -209,7 +226,8 @@ const SystemContentProvider = ({ children }) => {
     systemFetchData,
     deleteSystem,
     editSystem,
-    changeStateToRepair
+    changeStateToRepair,
+    changeStateToAvailable
   };
 
   return (
