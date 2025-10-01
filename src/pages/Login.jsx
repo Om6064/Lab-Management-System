@@ -27,7 +27,7 @@ const Login = () => {
     };
 
     return (
-        <div className="relative flex flex-col lg:flex-row items-center justify-center min-h-[92.5vh] bg-gray-900 overflow-hidden px-4 sm:px-6 lg:px-12">
+        <div className="relative flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gray-900 overflow-hidden px-4 sm:px-6 lg:px-12">
             <div className="absolute inset-0 z-0 opacity-10">
                 <svg
                     className="w-full h-full"

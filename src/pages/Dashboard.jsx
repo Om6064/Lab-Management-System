@@ -267,7 +267,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[92.5vh] bg-gray-900 text-white">
+      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
         <p className="text-lg animate-pulse">Loading dashboard...</p>
       </div>
     );
