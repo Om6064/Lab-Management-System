@@ -20,12 +20,15 @@ import AddStudent from "./pages/AddStudent"
 import EditStudents from "./pages/EditStudents"
 import ViewPcByLab from "./pages/ViewPcByLab"
 import ViewStudentByPc from "./pages/ViewStudentByPcs"
+import { useContext } from "react"
+import { AuthContext } from "./context/AuthContentProvider"
 
 const App = () => {
+    const {user} = useContext(AuthContext)
     return (
         <div>
             <BrowserRouter>
-                <Header />
+                {user && <Header />}
                 <Routes>
                     <Route path="/" element={<ProtectedRoute Comp={Dashboard} />} />
                     <Route path="/login" element={<ReverceProtectedRoutes Comp={Login} />} />
