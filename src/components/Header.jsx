@@ -2,12 +2,14 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContentProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import UserDropdown from "./UserDropdown";
+import Sidebar from "./SideBar";
 
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // sidebar toggle
 
   const handleLogout = async () => {
     await logout();
@@ -20,15 +22,14 @@ const Header = () => {
 
   return (
     <header
-      className={`${pathname === "/" ? "ml-64" : ""} bg-gray-900 text-white shadow-md`}
+      className={`md:ml-64 bg-gray-900 text-white shadow-md`}
     >
+      <Sidebar isOpen={isOpen} onLogout={logout} />
       <nav
-        className={`${
-          pathname !== "/" ? "container" : ""
-        } mx-auto px-3 sm:px-4 py-3 md:py-4`}
+        className={`${pathname !== "/" ? "container" : ""
+          } mx-auto px-3 sm:px-4 py-3 md:py-4`}
       >
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <Link
             to={"/"}
             className="flex items-center space-x-2 transition-transform hover:scale-105"
@@ -52,63 +53,58 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Desktop Nav */}
           {user && (
             <div className="hidden md:flex flex-grow justify-center space-x-6 lg:space-x-10">
               <Link
                 to="/"
-                className={`font-semibold ${
-                  pathname === "/" ? "text-blue-500" : "text-gray-300 hover:text-blue-500"
-                }`}
+                className={`font-semibold ${pathname === "/" ? "text-blue-500" : "text-gray-300 hover:text-blue-500"
+                  }`}
               >
                 Dashboard
               </Link>
               <Link
                 to="/systems"
-                className={`font-semibold ${
-                  ["/systems", "/addsystems"].includes(pathname) ||
+                className={`font-semibold ${["/systems", "/addsystems"].includes(pathname) ||
                   pathname.includes("/viewstudentbypc") ||
                   pathname.includes("/edit-system")
-                    ? "text-blue-500"
-                    : "text-gray-300 hover:text-blue-500"
-                }`}
+                  ? "text-blue-500"
+                  : "text-gray-300 hover:text-blue-500"
+                  }`}
               >
                 Systems
               </Link>
               <Link
                 to="/lab"
-                className={`font-semibold ${
-                  ["/lab", "/addlabs"].includes(pathname) ||
+                className={`font-semibold ${["/lab", "/addlabs"].includes(pathname) ||
                   pathname.includes("/viewpcbylab") ||
                   pathname.includes("/edit-lab")
-                    ? "text-blue-500"
-                    : "text-gray-300 hover:text-blue-500"
-                }`}
+                  ? "text-blue-500"
+                  : "text-gray-300 hover:text-blue-500"
+                  }`}
               >
                 Lab
               </Link>
               <Link
                 to="/student"
-                className={`font-semibold ${
-                  ["/student", "/addstudent"].includes(pathname) ||
+                className={`font-semibold ${["/student", "/addstudent"].includes(pathname) ||
                   pathname.includes("/edit-student")
-                    ? "text-blue-500"
-                    : "text-gray-300 hover:text-blue-500"
-                }`}
+                  ? "text-blue-500"
+                  : "text-gray-300 hover:text-blue-500"
+                  }`}
               >
                 Student
               </Link>
             </div>
           )}
 
-          {/* User Dropdown */}
           <div className="hidden md:block">
             <UserDropdown user={user} localHandleLogout={handleLogout} />
           </div>
 
-          {/* Mobile Menu Button */}
           <button
-            onClick={toggleMobileMenu}
+            onClick={() => {
+              setIsOpen(!isOpen);
+            }}
             type="button"
             className="md:hidden inline-flex items-center p-2 text-gray-400 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
           >
@@ -130,20 +126,17 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Mobile Nav */}
         <div
-          className={`md:hidden transition-all duration-300 ease-in-out ${
-            isMobileMenuOpen ? "max-h-screen opacity-100 mt-3" : "max-h-0 opacity-0 overflow-hidden"
-          }`}
+          className={`md:hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? "max-h-screen opacity-100 mt-3" : "max-h-0 opacity-0 overflow-hidden"
+            }`}
         >
           <ul className="flex flex-col space-y-2 font-medium bg-gray-800 rounded-lg p-3">
             <li>
               <Link
                 to="/"
                 onClick={toggleMobileMenu}
-                className={`block py-2 px-3 rounded ${
-                  pathname === "/" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
-                }`}
+                className={`block py-2 px-3 rounded ${pathname === "/" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+                  }`}
               >
                 Dashboard
               </Link>
@@ -152,9 +145,8 @@ const Header = () => {
               <Link
                 to="/systems"
                 onClick={toggleMobileMenu}
-                className={`block py-2 px-3 rounded ${
-                  pathname === "/systems" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
-                }`}
+                className={`block py-2 px-3 rounded ${pathname === "/systems" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+                  }`}
               >
                 Systems
               </Link>
@@ -163,9 +155,8 @@ const Header = () => {
               <Link
                 to="/lab"
                 onClick={toggleMobileMenu}
-                className={`block py-2 px-3 rounded ${
-                  pathname === "/lab" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
-                }`}
+                className={`block py-2 px-3 rounded ${pathname === "/lab" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+                  }`}
               >
                 Lab
               </Link>
@@ -174,9 +165,8 @@ const Header = () => {
               <Link
                 to="/student"
                 onClick={toggleMobileMenu}
-                className={`block py-2 px-3 rounded ${
-                  pathname === "/student" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
-                }`}
+                className={`block py-2 px-3 rounded ${pathname === "/student" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-gray-700"
+                  }`}
               >
                 Student
               </Link>

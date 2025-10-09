@@ -2,9 +2,9 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { db } from "../config/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import * as d3 from "d3";
-import { NavLink } from "react-router-dom";
 import { LayoutDashboard, Monitor, Users, Settings, Building2 } from "lucide-react";
 import { AuthContext } from "../context/AuthContentProvider";
+import Sidebar from "../components/SideBar";
 
 const Dashboard = () => {
   const { logout } = useContext(AuthContext);
@@ -14,9 +14,8 @@ const Dashboard = () => {
     occupiedPCs: 0,
     totalStudents: 0,
   });
-  const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(false); // sidebar toggle
+  const [isOpen, setIsOpen] = useState(false);
 
   const barChartRef = useRef();
   const pieChartRef = useRef();
@@ -53,7 +52,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (!stats.totalLabs && !stats.totalPCs && !stats.totalStudents) return;
 
-    // ===== Bar Chart =====
     d3.select(barChartRef.current).selectAll("*").remove();
     const barContainer = barChartRef.current;
     const width = barContainer.offsetWidth || 400;
@@ -110,7 +108,6 @@ const Dashboard = () => {
       .selectAll("text")
       .attr("fill", "white");
 
-    // ===== Pie Chart =====
     d3.select(pieChartRef.current).selectAll("*").remove();
     const pieSvg = d3
       .select(pieChartRef.current)
@@ -149,7 +146,6 @@ const Dashboard = () => {
       .attr("fill", "white")
       .style("font-size", "12px");
 
-    // ===== Line Chart =====
     d3.select(lineChartRef.current).selectAll("*").remove();
     const lineData = [
       { month: "Jan", value: stats.totalStudents * 0.5 },
@@ -213,7 +209,6 @@ const Dashboard = () => {
       .selectAll("text")
       .attr("fill", "white");
 
-    // ===== Horizontal Bar Chart =====
     d3.select(horizontalChartRef.current).selectAll("*").remove();
     const hdata = [
       { label: "Labs", value: stats.totalLabs },
@@ -275,127 +270,14 @@ const Dashboard = () => {
 
   return (
     <div className="flex">
-      {/* ===== Mobile Hamburger Button ===== */}
-      <button
-        className="md:hidden p-2 text-white fixed top-4 left-4 z-50 bg-gray-800 rounded-lg"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        ☰
-      </button>
-
-      {/* ===== Sidebar ===== */}
-      <aside
-        className={`w-64 bg-gray-900 text-gray-200 min-h-screen p-6 flex flex-col shadow-xl fixed top-0 left-0 transform 
-        ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 
-        transition-transform duration-300 z-40`}
-      >
-        <h2 className="text-2xl font-bold text-blue-400 mb-10 text-center tracking-wide">
-          Admin Panel
-        </h2>
-        <ul className="space-y-3 flex flex-col flex-grow">
-          <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${isActive
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "hover:bg-gray-800 hover:text-white text-gray-400"
-                }`
-              }
-            >
-              <LayoutDashboard size={20} />
-              Dashboard
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/lab"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${isActive
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "hover:bg-gray-800 hover:text-white text-gray-400"
-                }`
-              }
-            >
-              <Building2 size={20} />
-              Labs
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/systems"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${isActive
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "hover:bg-gray-800 hover:text-white text-gray-400"
-                }`
-              }
-            >
-              <Monitor size={20} />
-              Systems
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/student"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${isActive
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "hover:bg-gray-800 hover:text-white text-gray-400"
-                }`
-              }
-            >
-              <Users size={20} />
-              Students
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/settings"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${isActive
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "hover:bg-gray-800 hover:text-white text-gray-400"
-                }`
-              }
-            >
-              <Settings size={20} />
-              Settings
-            </NavLink>
-          </li>
-        </ul>
-
-        <div className="mt-auto pt-6 border-t border-gray-700">
-          <button
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500 hover:text-white transition-colors duration-200"
-            onClick={logout}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 12H3m12 0l-4-4m4 4l-4 4m6-4h6"
-              />
-            </svg>
-            Logout
-          </button>
-        </div>
-      </aside>
-
-      {/* ===== Main Content ===== */}
-      <main className="flex-1 bg-gray-900 text-white md:ml-64 p-4 sm:p-6 lg:p-8">
+    
+      <Sidebar isOpen={isOpen} onLogout={logout} />
+      
+      <main className="flex-1 bg-gray-900 text-white md:ml-64 p-4 sm:p-6 lg:p-8 min-h-screen">
         <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-blue-400">
           Dashboard Overview
         </h1>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-gray-800 p-6 rounded-lg shadow-xl flex items-center space-x-4">
             <div className="bg-blue-600 p-3 rounded-full"></div>

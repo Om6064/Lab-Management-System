@@ -2,10 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { LabContent } from "../context/LabContentProvider";
 import { Link } from "react-router-dom";
 import BackToDashboard from "../components/BackToDashboard";
+import Sidebar from "../components/SideBar";
+import { AuthContext } from "../context/AuthContentProvider";
 
 const Lab = () => {
+  const { logout } = useContext(AuthContext);
   const { labfetchedData, fetchData, deleteLab } = useContext(LabContent);
   const [searchTerm, setSearchTerm] = useState(""); 
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -20,12 +24,12 @@ const Lab = () => {
   );
 
   return (
-    <div className="bg-[#111827] min-h-screen">
+    <div className="bg-[#111827] min-h-screen md:ml-64">
       <div className="container mx-auto p-4">
         <div className="flex flex-col md:flex-row mt-8 md:mt-12 justify-between items-center mb-6 gap-4">
           <h2 className="font-semibold text-2xl md:text-3xl text-white">Labs</h2>
           <div className="flex gap-3 w-full md:w-auto">
-
+    <Sidebar isOpen={isOpen} onLogout={logout} />
             <input
               type="text"
               placeholder="Search labs..."
