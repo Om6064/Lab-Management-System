@@ -1,15 +1,9 @@
 import { LayoutDashboard, Monitor, Users, Settings, Building2 } from "lucide-react";
-import { NavLink } from "react-router-dom";
-
-const navItems = [
-  { name: "Dashboard", icon: LayoutDashboard, path: "/" },
-  { name: "Labs", icon: Building2, path: "/lab" },
-  { name: "Systems", icon: Monitor, path: "/systems" },
-  { name: "Students", icon: Users, path: "/student" },
-  { name: "Settings", icon: Settings, path: "/settings" },
-];
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = ({ isOpen, onLogout }) => {
+  const location = useLocation();
+
   return (
     <aside
       className={`w-64 bg-gray-900 text-gray-200 min-h-screen p-6 flex flex-col shadow-xl fixed top-0 left-0 transform 
@@ -21,23 +15,71 @@ const Sidebar = ({ isOpen, onLogout }) => {
       </h2>
 
       <ul className="space-y-3 flex flex-col flex-grow">
-        {navItems.map(({ name, icon: Icon, path }) => (
-          <li key={name}>
-            <NavLink
-              to={path}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${
-                  isActive
-                    ? "bg-blue-600 text-white shadow-md"
-                    : "hover:bg-gray-800 hover:text-white text-gray-400"
-                }`
-              }
-            >
-              <Icon size={20} />
-              {name}
-            </NavLink>
-          </li>
-        ))}
+        <li>
+          <Link
+            to="/"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${
+              location.pathname === "/" 
+                ? "bg-blue-600 text-white shadow-md" 
+                : "hover:bg-gray-800 hover:text-white text-gray-400"
+            }`}
+          >
+            <LayoutDashboard size={20} />
+            Dashboard
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/lab"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${
+              location.pathname === "/lab" || location.pathname === "/addlabs" || location.pathname.includes("/edit-lab") 
+                ? "bg-blue-600 text-white shadow-md" 
+                : "hover:bg-gray-800 hover:text-white text-gray-400"
+            }`}
+          >
+            <Building2 size={20} />
+            Labs
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/systems"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${
+              location.pathname === "/systems" || location.pathname === "/addsystems" || location.pathname.includes("/edit-system") 
+                ? "bg-blue-600 text-white shadow-md" 
+                : "hover:bg-gray-800 hover:text-white text-gray-400"
+            }`}
+          >
+            <Monitor size={20} />
+            Systems
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/student"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${
+              location.pathname === "/student" || location.pathname === "/addstudent" || location.pathname.includes("/edit-student") 
+                ? "bg-blue-600 text-white shadow-md" 
+                : "hover:bg-gray-800 hover:text-white text-gray-400"
+            }`}
+          >
+            <Users size={20} />
+            Students
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/settings"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${
+              location.pathname === "/settings" 
+                ? "bg-blue-600 text-white shadow-md" 
+                : "hover:bg-gray-800 hover:text-white text-gray-400"
+            }`}
+          >
+            <Settings size={20} />
+            Settings
+          </Link>
+        </li>
       </ul>
 
       <div className="mt-auto pt-6 border-t border-gray-700">

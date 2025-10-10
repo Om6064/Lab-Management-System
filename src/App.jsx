@@ -33,7 +33,7 @@ const App = () => {
                     <Route path="/" element={<ProtectedRoute Comp={Dashboard} />} />
                     <Route path="/login" element={<ReverceProtectedRoutes Comp={Login} />} />
                     <Route path="/profile" element={<ProtectedRoute Comp={ProfilePage} />} />
-                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/settings" element={<ProtectedRoute Comp={SettingsPage} />} />
                     <Route path="/systems" element={<ProtectedRoute Comp={System} />} />
                     <Route path="/lab" element={<ProtectedRoute Comp={Lab} />} />
                     <Route path="/student" element={<ProtectedRoute Comp={Student} />} />

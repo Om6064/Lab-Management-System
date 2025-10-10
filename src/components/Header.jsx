@@ -9,7 +9,7 @@ const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); // sidebar toggle
+  const [isOpen, setIsOpen] = useState(false); 
 
   const handleLogout = async () => {
     await logout();
@@ -53,7 +53,7 @@ const Header = () => {
             </span>
           </Link>
 
-          {user && (
+          {/* {user && (
             <div className="hidden md:flex flex-grow justify-center space-x-6 lg:space-x-10">
               <Link
                 to="/"
@@ -95,7 +95,7 @@ const Header = () => {
                 Student
               </Link>
             </div>
-          )}
+          )} */}
 
           <div className="hidden md:block">
             <UserDropdown user={user} localHandleLogout={handleLogout} />
