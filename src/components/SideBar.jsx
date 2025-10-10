@@ -10,9 +10,9 @@ const Sidebar = ({ isOpen, onLogout }) => {
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 
         transition-transform duration-300 z-40`}
     >
-      <h2 className="text-2xl font-bold text-blue-400 mb-10 text-center tracking-wide">
+      <Link to={"/"} className="text-2xl font-bold text-blue-400 mb-10 text-center tracking-wide">
         Admin Panel
-      </h2>
+      </Link>
 
       <ul className="space-y-3 flex flex-col flex-grow">
         <li>
@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, onLogout }) => {
           <Link
             to="/lab"
             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${
-              location.pathname === "/lab" || location.pathname === "/addlabs" || location.pathname.includes("/edit-lab") 
+              location.pathname === "/lab" || location.pathname === "/addlabs" || location.pathname.includes("/edit-lab") || location.pathname.includes("/viewpcbylab")
                 ? "bg-blue-600 text-white shadow-md" 
                 : "hover:bg-gray-800 hover:text-white text-gray-400"
             }`}
@@ -45,7 +45,7 @@ const Sidebar = ({ isOpen, onLogout }) => {
           <Link
             to="/systems"
             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors duration-200 ${
-              location.pathname === "/systems" || location.pathname === "/addsystems" || location.pathname.includes("/edit-system") 
+              location.pathname === "/systems" || location.pathname === "/addsystems" || location.pathname.includes("/edit-system") || location.pathname.includes("/viewstudentbypc")
                 ? "bg-blue-600 text-white shadow-md" 
                 : "hover:bg-gray-800 hover:text-white text-gray-400"
             }`}

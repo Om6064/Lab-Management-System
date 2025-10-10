@@ -27,7 +27,7 @@ const ViewStudentByPc = () => {
     }, [id]);
 
     return (
-        <div className="bg-[#111827] h-screen p-6">
+        <div className="bg-[#111827] h-screen p-6 md:ml-64">
             <div className="container mx-auto">
                 <h2 className="text-2xl font-bold text-white mb-6">Students on this PC</h2>
 

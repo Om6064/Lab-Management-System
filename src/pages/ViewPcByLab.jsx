@@ -27,7 +27,7 @@ const ViewPcByLab = () => {
   }, [id]);
 
   return (
-    <div className="bg-[#111827] h-screen p-6">
+    <div className="bg-[#111827] h-screen p-6 md:ml-64">
 
       <div className="container mx-auto">
         <h2 className=" text-2xl font-bold text-white mb-6">PCs in this Lab</h2>
@@ -76,6 +76,7 @@ const ViewPcByLab = () => {
                       
                       <button className="text-blue-500 hover:underline">Edit</button>
                       <button className="text-red-500 hover:underline">Delete</button>
+                      {sys.status == "Occupied" && <Link to={`/viewstudentbypc/${sys.id}`}>View</Link>}
                     </td>
                   </tr>
                 ))

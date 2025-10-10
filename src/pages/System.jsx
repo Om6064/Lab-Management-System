@@ -7,10 +7,10 @@ import Sidebar from "../components/SideBar";
 import { AuthContext } from "../context/AuthContentProvider";
 
 const System = () => {
-  const { systemFetchData, deleteSystem, changeStateToRepair,changeStateToAvailable } = useContext(SystemContent);
+  const { systemFetchData, deleteSystem, changeStateToRepair, changeStateToAvailable } = useContext(SystemContent);
   const { logout } = useContext(AuthContext);
   const { labfetchedData } = useContext(LabContent);
-  
+
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -33,7 +33,7 @@ const System = () => {
         <div className="flex flex-col md:flex-row mt-8 md:mt-12 justify-between items-center mb-6 gap-4">
           <h2 className="font-semibold text-2xl md:text-3xl text-white">Systems</h2>
           <div className="flex gap-3 w-full md:w-auto">
-    <Sidebar isOpen={isOpen} onLogout={logout} />
+            <Sidebar isOpen={isOpen} onLogout={logout} />
             <input
               type="text"
               placeholder="Search systems..."
@@ -114,7 +114,7 @@ const System = () => {
                           Make Available
                         </button>
                       )}
-
+                      {system.status == "Occupied" && <Link to={`/viewstudentbypc/${system.id}`}>View</Link>}
                     </td>
                   </tr>
                 ))
